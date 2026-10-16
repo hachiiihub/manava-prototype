@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Manava — Tahiti tout-en-un</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lagoon-deep: #0B3D3A;
+    --lagoon: #1C7A72;
+    --lagoon-light: #6FC7BE;
+    --sand: #F2E9D8;
+    --sand-2: #E9DDC4;
+    --coral: #E8613F;
+    --gold: #D9A441;
+    --ink: #14201E;
+    --card: #FFFFFF;
+    --line: rgba(20,32,30,0.10);
+    --shadow: 0 10px 24px rgba(11,61,58,0.10);
+    --warn: #8A5A12;
+    --glass-tint: linear-gradient(135deg, rgba(28,122,114,0.30), rgba(217,164,65,0.26));
+    --glass-border: rgba(255,255,255,0.60);
+    --glass-pill: rgba(255,255,255,0.84);
+    --glass-pill-text: #0B3D3A;
+    --glass-text: #14201E;
+    --glass-shadow: 0 8px 22px rgba(11,61,58,0.14);
+    --stage-a: rgba(111,199,190,0.80);
+    --stage-b: rgba(217,164,65,0.62);
+    --tab-active: #0B3D3A;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  *, *::before, *::after { box-sizing: inherit; }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --sand: #0F1715; --sand-2: #16211E; --card: #17221F; --ink: #F2E9D8;
+      --line: rgba(242,233,216,0.12); --shadow: 0 10px 24px rgba(0,0,0,0.35); --warn: #E3B65C; --glass-tint: linear-gradient(135deg, rgba(111,199,190,0.22), rgba(217,164,65,0.16)); --glass-border: rgba(255,255,255,0.18); --glass-pill: rgba(242,233,216,0.24); --glass-pill-text: #FFFFFF; --glass-text: #F2E9D8; --glass-shadow: 0 8px 22px rgba(0,0,0,0.4); --stage-a: rgba(28,122,114,0.75); --stage-b: rgba(217,164,65,0.38); --tab-active: #6FC7BE;
+    }
+  }
+  :root[data-theme="dark"] {
+    --sand: #0F1715; --sand-2: #16211E; --card: #17221F; --ink: #F2E9D8;
+    --line: rgba(242,233,216,0.12); --shadow: 0 10px 24px rgba(0,0,0,0.35); --warn: #E3B65C; --glass-tint: linear-gradient(135deg, rgba(111,199,190,0.22), rgba(217,164,65,0.16)); --glass-border: rgba(255,255,255,0.18); --glass-pill: rgba(242,233,216,0.24); --glass-pill-text: #FFFFFF; --glass-text: #F2E9D8; --glass-shadow: 0 8px 22px rgba(0,0,0,0.4); --stage-a: rgba(28,122,114,0.75); --stage-b: rgba(217,164,65,0.38); --tab-active: #6FC7BE;
+  }
+
+  html, body { height: 100%; margin: 0; background: var(--sand); color: var(--ink);
+    font-family: 'Space Grotesk', sans-serif; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3, .display { font-family: 'Fraunces', serif; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+  button { font-family: inherit; }
+
+  #app { max-width: 520px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column;
+    position: relative; background: var(--sand); }
+
+  /* ---------- Onboarding ---------- */
+  .onboarding { position: fixed; inset: 0; z-index: 150; background: linear-gradient(160deg, var(--lagoon-deep), var(--lagoon) 85%);
+    display: flex; align-items: center; justify-content: center; padding: 26px 22px calc(26px + env(safe-area-inset-bottom,0px));
+    padding-top: calc(26px + env(safe-area-inset-top,0px)); }
+  .ob-inner { width: 100%; max-width: 400px; }
+  .ob-step { display: flex; flex-direction: column; }
+  .ob-brand { color: #fff; font-family: 'Fraunces', serif; font-size: 22px; display: flex; align-items: center; gap: 8px; margin-bottom: 26px; justify-content: center; }
+  .ob-tabs { display: flex; background: rgba(255,255,255,0.14); border-radius: 999px; padding: 3px; margin-bottom: 20px; }
+  .ob-tab { flex: 1; border: none; background: transparent; color: rgba(255,255,255,0.75); font-size: 13px; font-weight: 600;
+    padding: 10px; border-radius: 999px; cursor: pointer; }
+  .ob-tab.active { background: #F2E9D8; color: #0B3D3A; }
+  .ob-inner label { display: block; color: rgba(255,255,255,0.85); font-size: 12.5px; font-weight: 600; margin-bottom: 6px; }
+  .ob-inner input { width: 100%; border: none; border-radius: 12px; padding: 13px 14px; font-family: inherit; font-size: 14.5px;
+    margin-bottom: 16px; outline: none; background: rgba(255,255,255,0.94); color: #14201E; }
+  .ob-error { color: #FFD9CE; font-size: 12.5px; min-height: 16px; margin: -8px 0 10px; line-height: 1.4; }
+  .ob-primary { width: 100%; border: none; background: var(--coral); color: #fff; font-weight: 700; font-size: 14.5px;
+    padding: 14px; border-radius: 14px; cursor: pointer; }
+  .ob-hint { color: rgba(255,255,255,0.55); font-size: 11.5px; text-align: center; margin-top: 16px; line-height: 1.5; }
+  .ob-lang-btn { display: block; width: 100%; border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.08);
+    color: #fff; font-family: inherit; font-size: 15px; font-weight: 600; padding: 16px; border-radius: 14px; margin-bottom: 12px; cursor: pointer; }
+  .onboarding { overflow: hidden; }
+  .ob-inner { position: relative; z-index: 2; }
+  .ob-title { color: #fff; text-align: center; margin-bottom: 22px; display: flex; flex-direction: column; gap: 6px; }
+  .ob-title-line { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 500; line-height: 1.35; }
+  #ob-lang { transition: opacity .3s ease; }
+  #ob-lang.leaving { opacity: 0; pointer-events: none; }
+  .ob-logo { position: absolute; left: 50%; top: 50%; z-index: 1; width: min(300px, 78vw); aspect-ratio: 1; border-radius: 50%;
+    transform: translate(-50%,-50%) scale(1); opacity: .18; pointer-events: none;
+    background: radial-gradient(circle at 40% 35%, #E8613F, #B4432A); }
+  .ob-logo.grow { animation: obLogoGrow 1.8s cubic-bezier(.22,.8,.25,1) forwards; }
+  @keyframes obLogoGrow { from { transform: translate(-50%,-50%) scale(1); opacity: .18; } to { transform: translate(-50%,-50%) scale(var(--ob-end, 3.4)); opacity: 1; } }
+  .ob-welcome { position: absolute; inset: 0; z-index: 3; align-items: center; justify-content: center; text-align: center; cursor: pointer; }
+  @keyframes obTextIn { 0%{opacity:0; transform:translateY(10px);} 100%{opacity:1; transform:translateY(0);} }
+  .ob-welcome-text { padding: 0 24px; font-family: 'Fraunces', serif; font-size: 30px; line-height: 1.2; color: #fff; opacity: 0; }
+  .ob-welcome.show .ob-welcome-text { animation: obTextIn 1.3s ease-out .2s forwards; }
+  @media (prefers-reduced-motion: reduce) { .ob-logo.grow { animation-duration: .01s; } .ob-welcome.show .ob-welcome-text { animation-duration: .01s; animation-delay: 0s; } #ob-lang { transition: none; } }
+  .apple-btn { width: 100%; border: 1px solid rgba(255,255,255,0.3); background: #000; color: #fff; font-family: inherit; font-size: 15px; font-weight: 600;
+    padding: 13px; border-radius: 12px; cursor: pointer; margin: 4px 0 12px; }
+  .auth-or { display: flex; align-items: center; gap: 10px; font-size: 12px; opacity: .6; margin: 0 0 10px; }
+  .auth-or::before, .auth-or::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+  .bank-logo { width: 44px; height: 32px; object-fit: contain; flex-shrink: 0; }
+
+  /* ---------- Header ---------- */
+  .topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+    background: linear-gradient(155deg, var(--lagoon-deep), var(--lagoon) 78%); color: var(--sand);
+    padding: 18px 20px 22px; border-radius: 0 0 26px 26px; box-shadow: var(--shadow); overflow: hidden;
+    position: relative; transition: padding .2s ease; }
+  .topbar.mini { padding-bottom: 16px; }
+  .topbar.mini #hero-block { display: none; }
+  .tatau-bg { position: absolute; inset: 0; opacity: 0.14; pointer-events: none; }
+  .topbar-row { display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 1; }
+  .brand { display: flex; align-items: baseline; gap: 8px; }
+  .brand .display { font-size: 22px; color: #fff; }
+  .brand .mark { width: 10px; height: 10px; border-radius: 50%; background: var(--coral); display: inline-block; transform: translateY(-1px); }
+  .lang-toggle { display: flex; background: rgba(255,255,255,0.14); border-radius: 999px; padding: 3px; gap: 2px; }
+  .lang-toggle button { border: none; background: transparent; color: rgba(255,255,255,0.75); font-size: 12px; font-weight: 600;
+    padding: 6px 11px; border-radius: 999px; cursor: pointer; }
+  .lang-toggle button.active { background: #F2E9D8; color: #0B3D3A; }
+  .greeting { margin-top: 18px; font-size: 26px; color: #fff; max-width: 260px; line-height: 1.15; position: relative; z-index: 1; }
+  .greeting.sub { font-family: 'Space Grotesk', sans-serif; font-weight: 400; font-size: 14px; color: rgba(255,255,255,0.72);
+    margin-top: 8px; line-height: 1.45; max-width: 300px; }
+  .search { background: var(--sand); border-radius: 16px; padding: 13px 16px; display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.16); }
+  .search.inline { background: var(--card); border: 1px solid var(--line); box-shadow: none; margin-bottom: 16px; }
+  .search input { border: none; outline: none; background: transparent; font-family: inherit; font-size: 14px; color: var(--ink); flex: 1; }
+  .search svg { flex-shrink: 0; }
+
+  /* ---------- Content ---------- */
+  .screen { display: none; padding: 20px 20px 12px; flex: 1; opacity: 1; transform: translateY(0); }
+  .screen.active { display: block; }
+  .screen.entering { opacity: 0; transform: translateY(10px); transition: none; }
+  .screen.entered { opacity: 1; transform: translateY(0); transition: opacity .22s ease-out, transform .22s ease-out; }
+
+  .section-title { display: flex; align-items: baseline; justify-content: space-between; margin: 26px 0 12px; }
+  .section-title:first-child { margin-top: 4px; }
+  .section-title h2 { font-size: 19px; }
+  .section-title .see-all { font-size: 12.5px; color: var(--lagoon); font-weight: 600; background: none; border: none; cursor: pointer; }
+
+  .chips { display: flex; gap: 9px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { flex-shrink: 0; border: 1px solid var(--line); background: var(--card); color: var(--ink); padding: 9px 15px;
+    border-radius: 12px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+  .chip.active { background: var(--lagoon-deep); border-color: var(--lagoon-deep); color: #fff; }
+
+  .deals-row { display: flex; gap: 12px; overflow-x: auto; padding: 14px 8px 30px; scrollbar-width: none; scroll-snap-type: x proximity; }
+  .deals-row::-webkit-scrollbar { display: none; }
+  .deal-card { flex-shrink: 0; width: 210px; border-radius: 18px; padding: 16px; color: #fff; position: relative;
+    overflow: hidden; box-shadow: var(--shadow); scroll-snap-align: center; transform-origin: center;
+    transition: transform .15s ease-out, opacity .15s ease-out, filter .15s ease-out, box-shadow .15s ease-out; }
+  .deal-card::before { content:""; position:absolute; inset:0; background: radial-gradient(circle at 18% 0%, rgba(255,255,255,0.32), transparent 62%); pointer-events:none; }
+  .deal-card .tag { display: inline-block; background: rgba(255,255,255,0.22); font-size: 10.5px; font-weight: 700;
+    letter-spacing: 0.02em; padding: 4px 9px; border-radius: 999px; margin-bottom: 34px; }
+  .deal-card h3 { font-size: 17px; color: #fff; line-height: 1.2; }
+  .deal-card .price { margin-top: 10px; font-size: 13px; opacity: 0.9; }
+  .deal-card .old { text-decoration: line-through; opacity: 0.65; margin-right: 6px; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 14px; display: flex;
+    gap: 13px; margin-bottom: 12px; box-shadow: var(--shadow); }
+  .thumb { width: 76px; height: 76px; border-radius: 14px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .card-body { flex: 1; min-width: 0; }
+  .card-top { display: flex; justify-content: space-between; gap: 8px; }
+  .card-body h3 { font-size: 15.5px; line-height: 1.25; }
+  .rating { font-size: 12px; font-weight: 600; color: var(--lagoon-deep); white-space: nowrap; display: flex; align-items: center; gap: 3px; }
+  .card-meta { font-size: 12.5px; color: var(--ink); opacity: 0.62; margin-top: 3px; }
+  .card-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+  .price-tag { font-size: 14.5px; font-weight: 700; color: var(--ink); }
+  .price-tag span { font-weight: 400; font-size: 11.5px; opacity: 0.6; }
+  .btn-mini { border: none; background: var(--lagoon-deep); color: #fff; font-size: 12px; font-weight: 600; padding: 7px 13px;
+    border-radius: 10px; cursor: pointer; }
+
+  .transport-card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow); }
+  .transport-top { display: flex; align-items: center; gap: 12px; }
+  .t-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--sand-2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .transport-top h3 { font-size: 15px; }
+  .t-eta { margin-left: auto; text-align: right; }
+  .t-eta .n { font-size: 17px; font-weight: 700; color: var(--lagoon-deep); font-family: 'Fraunces', serif; }
+  .t-eta .u { font-size: 10.5px; opacity: 0.6; display: block; }
+  .transport-desc { font-size: 12.5px; opacity: 0.68; margin-top: 8px; line-height: 1.45; }
+  .transport-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
+
+  .guide-card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow); }
+  .guide-top { display: flex; gap: 12px; align-items: center; }
+  .avatar { width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-family: 'Fraunces', serif; font-weight: 600; font-size: 17px; }
+  .guide-top h3 { font-size: 15.5px; }
+  .guide-langs { font-size: 11.5px; opacity: 0.6; margin-top: 2px; }
+  .guide-tags { display: flex; gap: 6px; margin: 12px 0 12px; flex-wrap: wrap; }
+  .guide-tags span { font-size: 11px; font-weight: 600; color: var(--lagoon-deep); background: var(--sand-2); padding: 4px 9px; border-radius: 999px; }
+
+  .empty-note { font-size: 12.5px; opacity: 0.55; text-align: center; padding: 30px 10px; }
+
+  /* ---------- Bottom nav ---------- */
+  .tabbar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 30; max-width: 520px; margin: 0 auto;
+    background: var(--card); border-top: 1px solid var(--line); display: flex; padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 0px)); }
+  .tab { flex: 1; border: none; background: none; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 6px 2px; color: var(--ink); opacity: 0.45; cursor: pointer; font-family: inherit; transition: transform .15s ease-out, opacity .15s, color .15s; }
+  .tab.active { opacity: 1; color: var(--tab-active); }
+  .tab.active svg { transform: translateY(-2px); transition: transform .18s ease-out; }
+  .tab:active { transform: scale(0.9); }
+  .tab span { font-size: 10.5px; font-weight: 600; }
+
+  /* ---------- Sheets ---------- */
+  .sheet-backdrop { position: fixed; inset: 0; background: rgba(11,20,19,0.5); z-index: 40; display: none; align-items: flex-end; justify-content: center; }
+  .sheet-backdrop.open { display: flex; }
+  .sheet { background: var(--sand); width: 100%; max-width: 520px; border-radius: 22px 22px 0 0;
+    padding: 22px 22px calc(22px + env(safe-area-inset-bottom, 0px)); animation: rise 0.25s ease-out; max-height: 88vh; overflow-y: auto; }
+  @keyframes rise { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .sheet-handle { width: 36px; height: 4px; background: var(--line); border-radius: 3px; margin: 0 auto 16px; }
+  .sheet h3 { font-size: 19px; margin-bottom: 6px; }
+  .sheet p { font-size: 13.5px; opacity: 0.7; line-height: 1.5; margin: 0 0 18px; }
+  .sheet .btn-primary { width: 100%; border: none; background: var(--coral); color: #fff; font-family: inherit; font-weight: 600;
+    font-size: 14.5px; padding: 14px; border-radius: 14px; cursor: pointer; }
+  .sheet .btn-close { width: 100%; border: none; background: transparent; color: var(--ink); opacity: 0.55; font-family: inherit;
+    font-weight: 500; font-size: 13px; padding: 12px; cursor: pointer; }
+  .ps-hero { height: 120px; border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+  .mini-map { width: 100%; height: auto; display: block; }
+
+  /* ---------- Reserve CTA (coral reserved for this only) ---------- */
+  .btn-reserve { border: none; background: var(--coral); color: #fff; font-size: 12px; font-weight: 700; padding: 7px 13px; border-radius: 10px; cursor: pointer; }
+
+  /* ---------- Desaturated secondary badges ---------- */
+  .guide-tags span { color: var(--ink); opacity: 0.68; background: var(--sand-2); font-weight: 500; }
+
+  /* ---------- Favorite heart (outline by default, filled dark when active — no red/coral, réservé au bouton Réserver) ---------- */
+  .heart-btn { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); color: var(--ink);
+    opacity: 0.55; font-size: 15px; display: flex; align-items: center; justify-content: center; padding: 0; line-height: 1; cursor: pointer; flex-shrink: 0; }
+  .heart-btn.active { opacity: 1; color: var(--tab-active); border-color: var(--tab-active); background: var(--sand-2); }
+  .back-btn { border: 1px solid var(--line); background: var(--card); color: var(--ink); width: 34px; height: 34px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; font-size: 16px; }
+
+  /* ---------- Currency pill ---------- */
+  .currency-pill { border: none; background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 600;
+    padding: 7px 11px; border-radius: 999px; cursor: pointer; }
+
+  /* ---------- Category menu (tapis déroulant) ---------- */
+  .menu-row { width: 100%; display: flex; align-items: center; gap: 12px; border: 1px solid var(--line); background: var(--card);
+    color: var(--ink); font-family: inherit; font-size: 14.5px; font-weight: 600; padding: 15px 16px; border-radius: 14px; margin-bottom: 10px; cursor: pointer; transition: background .1s, color .1s; }
+  .menu-row:active { background: var(--gold); color: #fff; border-color: var(--gold); }
+  .menu-row .mr-ic { font-size: 19px; }
+  .menu-row .mr-chev { margin-left: auto; opacity: 0.4; }
+  .tab[data-screen="reservations"].active { color: var(--gold); }
+
+  /* ---------- Payment / bank list ---------- */
+  .pay-input { width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 13px 14px; font-family: inherit; font-size: 14.5px;
+    margin-bottom: 4px; outline: none; background: var(--card); color: var(--ink); }
+  .bank-row { width: 100%; display: flex; align-items: center; gap: 12px; border: 1px solid var(--line); background: var(--card);
+    color: var(--ink); font-family: inherit; font-size: 14px; font-weight: 600; padding: 12px 14px; border-radius: 12px; margin-bottom: 9px; cursor: pointer; }
+  .bank-row.active { border-color: var(--coral); background: rgba(232,97,63,0.06); }
+  .bank-badge { width: 32px; height: 32px; border-radius: 9px; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+  /* ---------- Légal / confidentialité / paiement ---------- */
+  .legal-footer { padding: 8px 20px calc(96px + env(safe-area-inset-bottom, 0px)); text-align: center; }
+  .legal-link { border: none; background: none; color: var(--ink); opacity: 0.75; font-family: inherit; font-size: 12.5px; font-weight: 600; text-decoration: underline; cursor: pointer; padding: 6px; }
+  .legal-copy { font-size: 11px; opacity: 0.45; margin-top: 4px; }
+  .legal-banner { font-size: 12.5px; line-height: 1.5; background: var(--sand-2); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; }
+  details.legal-doc { background: var(--card); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 10px; overflow: hidden; }
+  details.legal-doc summary { list-style: none; cursor: pointer; padding: 14px 16px; font-weight: 700; font-size: 14.5px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  details.legal-doc summary::-webkit-details-marker { display: none; }
+  details.legal-doc summary::after { content: "+"; font-size: 18px; opacity: 0.5; }
+  details.legal-doc[open] summary::after { content: "–"; }
+  .doc-body { padding: 0 16px 12px; font-size: 13px; line-height: 1.55; opacity: 0.85; }
+  .doc-body p { margin: 0 0 9px; }
+  .anchor { scroll-margin-top: 96px; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 14px; }
+  .panel h3 { font-size: 16px; margin-bottom: 8px; }
+  .panel p { font-size: 12.5px; opacity: 0.7; line-height: 1.5; margin: 0 0 12px; }
+  .kv { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; padding: 7px 0; border-bottom: 1px dashed var(--line); }
+  .kv span:first-child { opacity: 0.6; }
+  .kv span:last-child { text-align: right; word-break: break-all; }
+  .field { width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px; font-family: inherit; font-size: 14px; background: var(--sand); color: var(--ink); margin: 10px 0; outline: none; }
+  .btn-dark { border: none; background: var(--ink); color: var(--sand); font-family: inherit; font-weight: 600; font-size: 13px; padding: 11px 14px; border-radius: 12px; cursor: pointer; }
+  .btn-ghost { border: 1px solid var(--line); background: transparent; color: var(--ink); font-family: inherit; font-weight: 600; font-size: 13px; padding: 11px 14px; border-radius: 12px; cursor: pointer; }
+  .msg { font-size: 12.5px; min-height: 16px; line-height: 1.4; margin: 0 0 8px; color: var(--warn); }
+  .switch-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+  .sw-t { font-size: 13.5px; font-weight: 600; }
+  .sw-d { font-size: 12px; opacity: 0.6; margin-top: 2px; line-height: 1.4; }
+  .switch { position: relative; width: 46px; height: 27px; flex-shrink: 0; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; inset: 0; background: var(--sand-2); border: 1px solid var(--line); border-radius: 999px; transition: background .2s; cursor: pointer; }
+  .slider::before { content: ""; position: absolute; width: 21px; height: 21px; left: 2px; top: 2px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .2s; }
+  .switch input:checked + .slider { background: var(--lagoon-deep); }
+  .switch input:checked + .slider::before { transform: translateX(19px); }
+  .check-row { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; line-height: 1.45; margin: 12px 0 4px; }
+  .check-row input { margin-top: 2px; width: 18px; height: 18px; flex-shrink: 0; }
+  .total-row { display: flex; justify-content: space-between; font-weight: 700; font-size: 17px; padding-top: 10px; }
+  .res-badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--sand-2); }
+  .bank-badge { width: 44px; font-size: 10.5px; }
+  .sheet .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+  #screen-legal { padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)); }
+
+  /* ---------- Accessibilité : textes plus grands, contrastes, zones de toucher ---------- */
+  .card-meta { font-size: 13.5px; opacity: 0.78; }
+  .guide-tags span { font-size: 12.5px; opacity: 0.92; padding: 5px 10px; }
+  .heart-btn { width: 36px; height: 36px; font-size: 18px; opacity: 0.8; position: relative; }
+  .heart-btn::after { content: ""; position: absolute; inset: -6px; }
+  .btn-mini, .btn-reserve { padding: 10px 15px; font-size: 13px; min-height: 40px; }
+  .card-bottom { flex-wrap: wrap; gap: 8px; }
+  .tab span { font-size: 11.5px; }
+  .section-title .see-all { font-size: 13.5px; }
+  .empty-note { font-size: 13.5px; opacity: 0.72; }
+  .price-tag span { font-size: 12.5px; opacity: 0.75; }
+  .chip { font-size: 14px; padding: 10px 16px; }
+  .sw-d, .legal-copy { font-size: 12.5px; }
+  .ps-hero { overflow: hidden; }
+  .ps-hero svg, .thumb svg { width: 100%; height: 100%; display: block; }
+  .thumb { overflow: hidden; }
+  .thumb svg, .thumb img { border-radius: 14px; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* Corail : uniquement Réserver (cartes) et le paiement final */
+  .sheet .btn-primary { background: var(--lagoon-deep); }
+  .sheet .btn-primary.pay { background: var(--coral); }
+  /* Divers */
+  .card-top .demo-pill { align-self: flex-start; flex-shrink: 0; }
+  .demo-pill { font-size: 11.5px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--sand-2); white-space: nowrap; }
+  .opt-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .opt-lbl { display: block; font-size: 12.5px; font-weight: 600; opacity: 0.75; margin-bottom: 2px; }
+  .stepper { display: flex; align-items: center; gap: 14px; margin: 6px 0 12px; }
+  .stepper button { width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font-size: 22px; cursor: pointer; }
+  .stepper span { min-width: 30px; text-align: center; font-weight: 700; font-size: 18px; }
+  .seg { display: flex; background: var(--sand-2); border-radius: 12px; padding: 3px; margin-bottom: 16px; }
+  .seg button { flex: 1; border: none; background: transparent; color: var(--ink); font-family: inherit; font-weight: 600; font-size: 14px; padding: 11px; border-radius: 10px; cursor: pointer; }
+  .seg button.active { background: var(--card); box-shadow: 0 1px 4px rgba(0,0,0,.14); }
+  .safety { background: var(--sand-2); border-radius: 14px; padding: 14px 16px; margin: 4px 0 8px; font-size: 13.5px; line-height: 1.55; }
+  .safety h3 { font-size: 15px; margin-bottom: 4px; }
+  .safety ul { margin: 6px 0 0; padding-left: 18px; }
+  .safety li { margin-bottom: 5px; }
+  .plan-day { margin-bottom: 12px; }
+  .plan-day h4 { font-family: 'Fraunces', serif; font-size: 15px; margin: 0 0 6px; }
+  .plan-day div { font-size: 13.5px; padding: 6px 0; border-bottom: 1px dashed var(--line); }
+  textarea.field { min-height: 80px; resize: vertical; }
+  /* ---------- Tour 3 : cœur, verre, galeries, contacts, bons plans, guides ---------- */
+  [hidden] { display: none !important; }
+  .tap { cursor: pointer; }
+  .heart-btn svg { width: 19px; height: 19px; display: block; overflow: visible; }
+  .tab .tab-heart path { transition: fill-opacity .2s; }
+  .tab.active .tab-heart path { fill: currentColor; fill-opacity: .2; }
+
+  .seg-stage { position: relative; border-radius: 22px; padding: 10px; margin-bottom: 16px; overflow: hidden; isolation: isolate;
+    background: radial-gradient(130px 90px at 12% 30%, var(--stage-a), transparent 70%), radial-gradient(150px 100px at 88% 75%, var(--stage-b), transparent 70%), var(--sand-2);
+    border: 1px solid var(--line); }
+  .seg-glass { position: relative; display: flex; padding: 4px; border-radius: 16px; background: var(--glass-tint);
+    -webkit-backdrop-filter: blur(16px) saturate(1.5); backdrop-filter: blur(16px) saturate(1.5);
+    border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,.35); }
+  .seg-pill { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 2); border-radius: 12px;
+    background: var(--glass-pill); border: 1px solid var(--glass-border); box-shadow: 0 4px 12px rgba(11,61,58,.18);
+    transition: transform .34s cubic-bezier(.3,.9,.3,1); }
+  .seg-glass[data-v="plan"] .seg-pill { transform: translateX(100%); }
+  .seg-glass button { position: relative; z-index: 1; flex: 1; border: none; background: transparent; color: var(--glass-text);
+    font-family: inherit; font-weight: 600; font-size: 14.5px; padding: 12px 8px; border-radius: 12px; cursor: pointer; min-height: 44px; transition: color .25s; }
+  .seg-glass button.active { color: var(--glass-pill-text); font-weight: 700; }
+  @media (prefers-reduced-motion: reduce) { .seg-pill { transition: none; } }
+
+  .plan-day h4 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  #ics-msg:empty { display: none; }
+  .plan-day .plan-remind { font-size: 12.5px; opacity: .72; border-bottom: none; padding-top: 4px; }
+  .plan-date { color-scheme: light dark; }
+
+  .remind { display: flex; gap: 12px; align-items: flex-start; background: var(--card); border: 1px solid var(--gold); border-left-width: 5px;
+    border-radius: 14px; padding: 12px 14px; margin-bottom: 14px; box-shadow: var(--shadow); }
+  .remind-ic { font-size: 22px; line-height: 1.2; }
+  .remind-b { flex: 1; min-width: 0; font-size: 13.5px; line-height: 1.45; }
+  .remind-b b { display: block; margin-bottom: 2px; }
+  .remind-act { display: flex; flex-direction: column; gap: 6px; }
+  .remind-act .btn-mini, .remind-act .btn-ghost { min-height: 38px; padding: 8px 12px; font-size: 13px; }
+
+  .gallery { position: relative; border-radius: 16px; overflow: hidden; background: var(--sand-2); }
+  .ps-hero .gallery { width: 100%; height: 100%; border-radius: 0; }
+  .gal-track { display: flex; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .gal-track::-webkit-scrollbar { display: none; }
+  .gal-slide { flex: 0 0 100%; scroll-snap-align: center; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: #fff; }
+  .gal-slide img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .gal-slide .ph-ic { font-size: 44px; }
+  .gal-slide .ph-lb { font-weight: 700; font-size: 14px; text-shadow: 0 1px 4px rgba(0,0,0,.35); }
+  .gal-count, .gal-badge, .gal-credit { position: absolute; background: rgba(11,20,19,.66); color: #fff; font-size: 12px; font-weight: 600; padding: 4px 9px; border-radius: 999px; }
+  .gal-count { right: 10px; bottom: 10px; }
+  .gal-badge { left: 10px; top: 10px; font-size: 11.5px; }
+  .gal-credit { left: 10px; bottom: 10px; font-size: 11px; font-weight: 500; max-width: 70%; }
+
+  .soc-list { display: flex; flex-direction: column; gap: 8px; margin: 8px 0 8px; }
+  .soc { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; border: 1px solid var(--line); background: var(--card); color: var(--ink);
+    font-family: inherit; padding: 10px 12px; border-radius: 12px; cursor: pointer; }
+  .soc-ab { width: 38px; height: 38px; border-radius: 10px; background: var(--sand-2); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12.5px; flex-shrink: 0; }
+  .soc-t { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .soc-t b { font-size: 13.5px; }
+  .soc-t small { font-size: 12.5px; opacity: .72; word-break: break-all; user-select: text; -webkit-user-select: text; }
+  .soc-c { font-size: 12px; font-weight: 700; opacity: .85; white-space: nowrap; }
+  .cs-h { font-family: 'Fraunces', serif; font-size: 15px; margin: 16px 0 4px; }
+  .ls-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin: 12px 0 4px; }
+  .btn-reserve.full { width: 100%; padding: 14px; font-size: 14.5px; border-radius: 14px; margin-top: 4px; }
+  .rule-list { margin: 8px 0 0; padding-left: 18px; font-size: 13px; line-height: 1.5; }
+  .stay-rule { font-size: 12.5px; opacity: .8; margin: 4px 0 0; }
+  .stay-rule.bad { color: var(--warn); font-weight: 700; opacity: 1; }
+
+  .deal-card.wide { width: auto; margin-bottom: 14px; padding: 18px; display: block; transform: none; }
+  .deal-card.wide .tag { margin-bottom: 26px; }
+  .deal-card.wide .row { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .deal-card.wide .price { margin-top: 0; font-size: 15px; }
+  .deal-card.wide .btn-reserve { position: relative; z-index: 1; box-shadow: 0 0 0 2px rgba(255,255,255,.92); }
+
+  .guide-sec-h { display: flex; align-items: center; gap: 9px; margin: 22px 0 10px; }
+  .guide-sec-h h2 { font-size: 16.5px; flex: 1; }
+  .guide-sec-h .count { font-size: 12px; opacity: .65; }
+  .guide-bio { font-size: 13.5px; opacity: .78; line-height: 1.5; margin: 10px 0 0; }
+
+</style>
+</head>
+<body>
+
+<div class="onboarding" id="onboarding">
+  <div class="ob-logo" id="ob-logo" aria-hidden="true"></div>
+  <div class="ob-inner">
+    <div class="ob-step" id="ob-lang">
+      <div class="ob-brand"><span>Manava</span></div>
+      <div class="ob-title"><span class="ob-title-line">Choisissez votre langue</span><span class="ob-title-line">Choose your language</span></div>
+      <button class="ob-lang-btn" data-l="fr">🇫🇷 Français</button>
+      <button class="ob-lang-btn" data-l="en">🇬🇧 English</button>
+    </div>
+    <div class="ob-step ob-welcome" id="ob-welcome" style="display:none">
+      <div class="ob-welcome-text" id="ob-welcome-text"></div>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="topbar" id="topbar">
+    <svg class="tatau-bg" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice">
+      <defs><pattern id="tatau" width="46" height="46" patternUnits="userSpaceOnUse">
+        <path d="M0 23 C 8 8, 18 8, 23 23 C 28 38, 38 38, 46 23" fill="none" stroke="#F2E9D8" stroke-width="1.4"/>
+        <circle cx="23" cy="23" r="2.2" fill="#F2E9D8"/>
+      </pattern></defs>
+      <rect width="400" height="220" fill="url(#tatau)"/>
+    </svg>
+    <div class="topbar-row">
+      <div class="brand" id="brand-tap"><span class="mark"></span><span class="display" data-i="brand">Manava</span></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="currency-pill" id="currency-btn">XPF ▾</button>
+        <div class="lang-toggle">
+          <button data-lang="fr" class="active">FR</button>
+          <button data-lang="en">EN</button>
+        </div>
+      </div>
+    </div>
+    <div id="hero-block">
+      <h1 class="greeting" data-i="greeting">Où irez-vous<br>aujourd'hui ?</h1>
+      <div class="greeting sub" data-i="greetingSub">Tout Tahiti, un seul endroit : activités, transport, guides et bons plans.</div>
+    </div>
+  </div>
+
+  <div class="screen active" id="screen-home">
+    <div id="remind-banner" hidden></div>
+    <div class="section-title"><h2 data-i="dealsTitle">Bons plans du jour</h2><button class="see-all" data-i="seeAll">Tout voir</button></div>
+    <div class="deals-row" id="deals-row"></div>
+    <div class="section-title"><h2 data-i="weatherTitle">Que faire aujourd'hui ?</h2></div>
+    <div class="chips" id="weather-chips"></div>
+    <div class="sw-d" id="weather-note" style="margin:8px 0 12px"></div>
+    <div id="weather-list"></div>
+
+    <div class="section-title"><h2 data-i="catTitle">Explorer par catégorie</h2></div>
+    <div class="chips" id="home-cats"></div>
+    <div class="section-title"><h2 data-i="recTitle">Recommandé pour vous</h2></div>
+    <div id="home-reco"></div>
+  </div>
+
+  <div class="screen" id="screen-explore">
+    <div style="display:flex;align-items:center;gap:10px;margin:4px 0 16px">
+      <button class="back-btn" data-back="menu" aria-label="Retour">←</button>
+      <div class="search inline" style="flex:1;margin:0">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0B3D3A" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="explore-search-input" placeholder="Rechercher…">
+      </div>
+    </div>
+    <div id="explore-list"></div>
+  </div>
+
+  <div class="screen" id="screen-transport">
+    <div style="display:flex;align-items:center;gap:10px;margin:4px 0 14px">
+      <button class="back-btn" data-back="menu" aria-label="Retour">←</button>
+      <h2 style="font-size:19px" data-i="transportTitle">Transport</h2>
+    </div>
+    <div class="search inline">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0B3D3A" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="transport-search-input" data-i="communePh" placeholder="Rechercher une commune…">
+    </div>
+    <div id="transport-list"></div>
+  </div>
+
+  <div class="screen" id="screen-menu">
+    <div class="section-title" style="margin-top:4px"><h2 data-i="menuTitle">Catégories</h2></div>
+    <div id="menu-list"></div>
+  </div>
+
+  <div class="screen" id="screen-deals">
+    <div style="display:flex;align-items:center;gap:10px;margin:4px 0 6px">
+      <button class="back-btn" data-back="home" aria-label="Retour">←</button>
+      <h2 style="font-size:19px" data-i="dealsTitle">Bons plans du jour</h2>
+    </div>
+    <div class="empty-note" id="deals-date" style="text-align:left;padding:0 0 14px"></div>
+    <div id="deals-list"></div>
+  </div>
+
+  <div class="screen" id="screen-hebergement">
+    <div style="display:flex;align-items:center;gap:10px;margin:4px 0 14px">
+      <button class="back-btn" data-back="menu" aria-label="Retour">←</button>
+      <h2 style="font-size:19px" data-i="navHebergement">Hébergements</h2>
+    </div>
+    <div class="search inline">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0B3D3A" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="hebergement-search-input" data-i="communePh" placeholder="Rechercher une commune…">
+    </div>
+    <div id="lodging-list"></div>
+  </div>
+
+  <div class="screen" id="screen-guides">
+    <div style="display:flex;align-items:center;gap:10px;margin:4px 0 6px">
+      <button class="back-btn" data-back="menu" aria-label="Retour">←</button>
+      <h2 style="font-size:19px" data-i="guidesTitle">Guides locaux</h2>
+    </div>
+    <div class="empty-note" data-i="guidesSub" style="text-align:left;opacity:0.6;padding:0 0 12px;font-size:12.5px">Des habitants vérifiés pour découvrir Tahiti autrement.</div>
+    <div class="chips" id="guides-chips" style="margin-bottom:14px"></div>
+    <div id="guides-list"></div>
+  </div>
+
+  <div class="screen" id="screen-partner">
+    <div style="display:flex;align-items:center;gap:10px;margin:4px 0 14px">
+      <button class="back-btn" data-back="menu" aria-label="Retour">←</button>
+      <h2 style="font-size:19px" data-i="partnerTitle">Devenir partenaire</h2>
+    </div>
+    <div id="partner-body"></div>
+  </div>
+
+  <div class="screen" id="screen-favoris">
+    <div class="section-title" style="margin-top:4px"><h2 data-i="navFavoris">Favoris</h2></div>
+    <div class="seg-stage"><div class="seg-glass" id="fav-seg" data-v="list" role="tablist"><span class="seg-pill"></span><button type="button" role="tab" data-fv="list"></button><button type="button" role="tab" data-fv="plan"></button></div></div>
+    <div id="favoris-list"></div>
+  </div>
+
+  <div class="screen" id="screen-reservations">
+    <div class="section-title" style="margin-top:4px"><h2 data-i="navReservations">Mes réservations</h2></div>
+    <div id="reservations-list"></div>
+    <div class="card" style="align-items:center;margin-top:18px">
+      <div class="avatar" style="background:var(--lagoon)" id="profile-avatar-letter">?</div>
+      <div class="card-body">
+        <h3 id="profile-email">—</h3>
+        <div class="card-meta" data-i="profileGuestSub">Compte créé au moment de la réservation</div>
+      </div>
+    </div>
+    <div id="admin-stats" style="display:none">
+      <div class="section-title"><h2 data-i="profileStatsTitle">Statistiques (démo)</h2></div>
+      <div class="empty-note" style="text-align:left;padding:0 0 6px" id="profile-count-note"></div>
+    </div>
+    <div class="section-title"><h2 data-i="profileActionsTitle">Compte</h2></div>
+    <button class="chip" id="go-mydata" style="width:100%;text-align:center;margin-bottom:9px" data-i="myDataBtn">Mes données personnelles</button>
+    <button class="chip" id="go-delete" style="width:100%;text-align:center;margin-bottom:9px" data-i="deleteBtn">Supprimer mon compte</button>
+    <button class="chip" id="reset-demo" style="width:100%;text-align:center" data-i="resetDemo">Réinitialiser la démonstration</button>
+  </div>
+
+  <div class="screen" id="screen-legal">
+    <div style="display:flex;align-items:center;gap:10px;margin:4px 0 14px">
+      <button class="back-btn" id="legal-back" aria-label="Retour">←</button>
+      <h2 style="font-size:19px" data-i="legalTitle">Mentions légales</h2>
+    </div>
+    <div class="legal-banner" id="legal-banner"></div>
+    <div id="legal-docs"></div>
+    <div id="privacy-space" style="margin-top:18px"></div>
+  </div>
+
+  <footer class="legal-footer" id="legal-footer">
+    <button class="legal-link" id="legal-link" data-i="legalLink">Mentions légales</button>
+    <div class="legal-copy">© Manava — prototype</div>
+  </footer>
+
+  <div class="tabbar">
+    <button class="tab active" data-screen="home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+      <span data-i="navHome">Accueil</span>
+    </button>
+    <button class="tab" data-screen="favoris">
+      <svg class="tab-heart" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <span data-i="navFavoris">Favoris</span>
+    </button>
+    <button class="tab" data-screen="menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <span data-i="navMenu">Catégories</span>
+    </button>
+    <button class="tab" data-screen="reservations">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 2v4M16 2v4M4 10h16"/></svg>
+      <span data-i="navReservations">Réservations</span>
+    </button>
+  </div>
+</div>
+
+<div class="sheet-backdrop" id="sheet-backdrop">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div id="pay-confirm">
+      <h3 id="sheet-title">—</h3>
+      <div id="sheet-options" style="margin-top:12px"></div>
+      <div id="sheet-breakdown" style="margin:12px 0 8px"></div>
+      <p id="sheet-fx-note" style="font-size:12px;opacity:.6;margin:6px 0 14px"></p>
+    </div>
+    <div id="pay-auth" style="display:none">
+      <h3 data-i="payAuthTitle">Identification</h3>
+      <p data-i="payAuthText">Nécessaire pour confirmer votre réservation.</p>
+      <button type="button" class="apple-btn" id="pay-apple">Continuer avec Apple</button>
+      <div class="auth-or"><span id="pay-or">ou avec votre e-mail</span></div>
+      <label id="pay-email-lbl" style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;opacity:.75">E-mail</label>
+      <input type="email" id="pay-email" class="pay-input" placeholder="vous@email.com">
+      <label id="pay-pass-lbl" style="display:block;font-size:12.5px;font-weight:600;margin:12px 0 6px;opacity:.75">Mot de passe</label>
+      <input type="password" id="pay-pass" class="pay-input" placeholder="••••••••">
+      <p id="pay-apple-note" style="font-size:11.5px;opacity:.6;line-height:1.5;margin:10px 0 0"></p>
+      <div class="msg" id="pay-error" style="margin-top:8px"></div>
+    </div>
+    <div id="pay-method" style="display:none">
+      <h3 data-i="payMethodTitle">Moyen de paiement</h3>
+      <div id="bank-list" style="margin-top:12px"></div>
+      <p id="pay-secure-note" style="font-size:12px;opacity:.6;line-height:1.5;margin:6px 0 14px"></p>
+    </div>
+    <div id="pay-review" style="display:none">
+      <h3 id="review-title"></h3>
+      <div id="review-body" style="margin:12px 0 6px"></div>
+      <label class="check-row"><input type="checkbox" id="cgv-check"><span id="cgv-label"></span></label>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px">
+        <button class="legal-link" id="review-cgv-link" style="padding-left:0"></button>
+        <button class="legal-link" id="pay-sim-fail" style="padding-left:0"></button>
+      </div>
+    </div>
+    <div id="pay-failed" style="display:none;text-align:center;padding:10px 0 4px"></div>
+    <div id="pay-dup" style="display:none;text-align:center;padding:10px 0 4px"></div>
+    <div id="pay-done" style="display:none;text-align:center;padding:10px 0 4px"></div>
+    <div class="msg" id="pay-msg" style="margin-top:6px"></div>
+    <button class="btn-primary" id="sheet-next">Continuer</button>
+    <button class="btn-close" id="sheet-close" data-i="sheetClose">Fermer</button>
+  </div>
+</div>
+
+<div class="sheet-backdrop" id="currency-sheet-backdrop">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h3 data-i="currencyTitle" style="margin-bottom:14px">Devise</h3>
+    <div id="currency-list"></div>
+    <button class="btn-close" id="currency-close" data-i="sheetClose">Fermer</button>
+  </div>
+</div>
+
+<div class="sheet-backdrop" id="place-sheet-backdrop">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="ps-hero" id="ps-hero"><span id="ps-icon" style="font-size:30px"></span></div>
+    <h3 id="ps-title" style="margin-top:14px">—</h3>
+    <div class="card-meta" id="ps-commune" style="margin-bottom:6px"></div>
+    <div class="guide-tags" id="ps-tags" style="margin-bottom:10px"></div>
+    <p id="ps-desc" style="font-size:13.5px;opacity:.75;line-height:1.5;margin:0 0 16px"></p>
+    <div class="chips" style="margin-bottom:12px">
+      <button class="chip ps-mode" data-mode="walk">🚶 <span data-i="modeWalk">À pied</span></button>
+      <button class="chip ps-mode" data-mode="bus">🚌 <span data-i="modeBus">Bus</span></button>
+      <button class="chip ps-mode" data-mode="car">🚗 <span data-i="modeCar">Voiture</span></button>
+    </div>
+    <div id="ps-map" style="margin-bottom:10px"></div>
+    <p id="ps-disclaimer" data-i="distNote" style="font-size:12.5px;opacity:.65;line-height:1.45;margin:0 0 10px"></p>
+    <div class="transport-bottom" style="border:none;padding-top:0;margin-top:0">
+      <div class="price-tag" id="ps-distance">—</div>
+      <div class="card-meta" id="ps-origin-note" style="opacity:.6"></div>
+    </div>
+    <button class="chip" id="ps-geo-btn" style="margin-top:12px;display:none"></button>
+    <button class="btn-close" id="ps-close" style="margin-top:14px" data-i="sheetClose">Fermer</button>
+  </div>
+</div>
+
+<div class="sheet-backdrop" id="lodging-sheet-backdrop">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div id="ls-body"></div>
+    <button class="btn-close" id="lodging-close" style="margin-top:8px">Fermer</button>
+  </div>
+</div>
+
+<div class="sheet-backdrop" id="contact-sheet-backdrop">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div id="cs-body"></div>
+    <button class="btn-close" id="contact-close" style="margin-top:8px">Fermer</button>
+  </div>
+</div>
+
+<script>
+const store = (() => { try { const k='__manava_t'; window.localStorage.setItem(k,'1'); window.localStorage.removeItem(k); return window.localStorage; } catch(e){ const m={}; return { getItem:k=>Object.prototype.hasOwnProperty.call(m,k)?m[k]:null, setItem:(k,v)=>{ m[k]=String(v); }, removeItem:k=>{ delete m[k]; } }; } })();
+const dict = {
+  brand: { fr:"Manava", en:"Manava" },
+  greeting: { fr:"Où irez-vous<br>aujourd'hui ?", en:"Where will you<br>go today?" },
+  greetingSub: { fr:"Tout Tahiti, un seul endroit : activités, transport, guides et bons plans.", en:"All of Tahiti, one place: activities, transport, guides and deals." },
+  searchPh: { fr:"Rechercher une activité, un lieu…", en:"Search an activity, a place…" },
+  dealsTitle: { fr:"Bons plans du jour", en:"Today's deals" },
+  seeAll: { fr:"Tout voir", en:"See all" },
+  catTitle: { fr:"Explorer par catégorie", en:"Browse by category" },
+  recTitle: { fr:"Recommandé pour vous", en:"Recommended for you" },
+  exploreTitle: { fr:"Explorer", en:"Explore" },
+  transportTitle: { fr:"Transport", en:"Transport" },
+  transportSub: { fr:"Disponibilité et temps d'attente en temps réel autour de vous.", en:"Real-time availability and wait times around you." },
+  guidesTitle: { fr:"Guides locaux", en:"Local guides" },
+  guidesSub: { fr:"Des habitants vérifiés pour découvrir Tahiti autrement.", en:"Verified locals to discover Tahiti differently." },
+  profileTitle: { fr:"Profil", en:"Profile" },
+  profileGuestSub: { fr:"Compte créé sur cet appareil", en:"Account created on this device" },
+  profileStatsTitle: { fr:"Statistiques (démo)", en:"Statistics (demo)" },
+  profileActionsTitle: { fr:"Compte", en:"Account" },
+  resetDemo: { fr:"Réinitialiser la démonstration", en:"Reset the demo" },
+  profileNote: { fr:"Ceci est un premier prototype — chaque écran sera affiné au fil des retours terrain.", en:"This is an early prototype — every screen will be refined from field feedback." },
+  navHome: { fr:"Accueil", en:"Home" }, navExplore: { fr:"Explorer", en:"Explore" },
+  navTransport: { fr:"Transport", en:"Transport" }, navGuides: { fr:"Guides", en:"Guides" }, navProfile: { fr:"Profil", en:"Profile" },
+  navMenu: { fr:"Catégories", en:"Categories" }, navFavoris: { fr:"Favoris", en:"Favorites" }, navReservations: { fr:"Réservations", en:"Bookings" },
+  navHebergement: { fr:"Hébergements", en:"Stays" }, menuTitle: { fr:"Catégories", en:"Categories" },
+  sheetText2: { fr:"Vérifiez les détails avant de continuer.", en:"Check the details before continuing." },
+  payAuthTitle: { fr:"Identification", en:"Sign in" },
+  payAuthText: { fr:"Nécessaire pour confirmer votre réservation (prototype : stocké uniquement sur cet appareil).", en:"Needed to confirm your booking (prototype: stored on this device only)." },
+  payMethodTitle: { fr:"Moyen de paiement", en:"Payment method" },
+  payDoneTitle: { fr:"Réservation confirmée", en:"Booking confirmed" },
+  payDoneText: { fr:"Retrouvez-la dans l'onglet Réservations.", en:"Find it in the Bookings tab." },
+  currencyTitle: { fr:"Devise", en:"Currency" },
+  noFavoris: { fr:"Aucun favori pour l'instant — touchez le cœur sur une plage ou un hébergement.", en:"No favorites yet — tap the heart on a beach or a stay." },
+  noReservations: { fr:"Aucune réservation pour l'instant.", en:"No bookings yet." },
+  legalLink: { fr:"Mentions légales", en:"Legal notice" }, legalTitle: { fr:"Mentions légales", en:"Legal notice" },
+  myDataBtn: { fr:"Mes données personnelles", en:"My personal data" }, deleteBtn: { fr:"Supprimer mon compte", en:"Delete my account" },
+  weatherTitle: { fr:"Que faire aujourd'hui ?", en:"What to do today?" },
+  partnerTitle: { fr:"Devenir partenaire", en:"Become a partner" },
+  distNote: { fr:"Distance à vol d'oiseau, position du lieu approximative. Durées indicatives selon le mode choisi.", en:"Straight-line distance, approximate location of the place. Times are indicative for the chosen mode." },
+  communePh: { fr:"Rechercher une commune…", en:"Search a municipality…" },
+  perNight: { fr:"/ nuit", en:"/ night" },
+  sheetClose: { fr:"Fermer", en:"Close" },
+  book: { fr:"Réserver", en:"Book" }, reserve: { fr:"Réserver", en:"Reserve" }, contact: { fr:"Contacter", en:"Contact" },
+  perDay: { fr:"/ jour", en:"/ day" }, perPerson: { fr:"/ pers.", en:"/ person" }, min: { fr:"min", en:"min" },
+  modeWalk: { fr:"À pied", en:"Walk" }, modeBus: { fr:"Bus", en:"Bus" }, modeCar: { fr:"Voiture", en:"Car" },
+  discover: { fr:"Découvrir", en:"Discover" }, realPlace: { fr:"Lieu réel", en:"Real place" },
+};
+
+let lang = "fr";
+
+const deals = [
+  { id:"dl1", grad:"linear-gradient(150deg,#E8613F,#C7472A)", tag:{fr:"−25%",en:"−25%"}, title:{fr:"Sortie lagon au coucher du soleil",en:"Sunset lagoon cruise"}, oldPrice:6500, price:4900, unit:"perPerson" },
+  { id:"dl2", grad:"linear-gradient(150deg,#1C7A72,#0B3D3A)", tag:{fr:"Aujourd'hui",en:"Today only"}, title:{fr:"Randonnée vallée de Fautaua",en:"Fautaua valley hike"}, oldPrice:5000, price:3500, unit:"perPerson" },
+  { id:"dl3", grad:"linear-gradient(150deg,#D9A441,#B47E28)", tag:{fr:"Nightlife",en:"Nightlife"}, title:{fr:"Soirée dansante à Papeete",en:"Papeete dance night"}, oldPrice:3000, price:2000, unit:"perPerson" },
+  { id:"dl4", grad:"linear-gradient(150deg,#1C3B6E,#0B3D3A)", tag:{fr:"−20%",en:"−20%"}, title:{fr:"Snorkeling avec les raies",en:"Snorkeling with rays"}, oldPrice:7900, price:6300, unit:"perPerson" },
+  { id:"dl5", grad:"linear-gradient(150deg,#8E4585,#4A2145)", tag:{fr:"Aujourd'hui",en:"Today only"}, title:{fr:"Dîner-spectacle polynésien",en:"Polynesian dinner show"}, oldPrice:9500, price:7500, unit:"perPerson" },
+  { id:"dl6", grad:"linear-gradient(150deg,#4C6B3A,#14201E)", tag:{fr:"−15%",en:"−15%"}, title:{fr:"Scooter, location à la journée",en:"Scooter, day rental"}, oldPrice:3500, price:2900, unit:"perDay" },
+];
+
+const categories = [
+  { fr:"Plage & lagon", en:"Beach & lagoon" }, { fr:"Randonnée", en:"Hiking" },
+  { fr:"Nightlife", en:"Nightlife" }, { fr:"Culture", en:"Culture" }, { fr:"Nautique", en:"Water sports" },
+];
+
+const activities = [
+  { id:"act1", icon:"🌺", grad:"linear-gradient(150deg,#6FC7BE,#1C7A72)", title:{fr:"Snorkeling avec les raies",en:"Snorkeling with rays"}, meta:{fr:"Lagon de Moorea · 2h30",en:"Moorea lagoon · 2h30"}, rating:4.8, price:7900, unit:"perPerson", cat:"Nautique" },
+  { id:"act2", icon:"🥾", grad:"linear-gradient(150deg,#8FA86A,#4C6B3A)", title:{fr:"Trek volcanique du Mont Aorai",en:"Mount Aorai volcanic trek"}, meta:{fr:"Pirae · Journée complète",en:"Pirae · Full day"}, rating:4.6, price:5500, unit:"perPerson", cat:"Randonnée" },
+  { id:"act3", icon:"🎭", grad:"linear-gradient(150deg,#D9A441,#9C6E22)", title:{fr:"Spectacle de danse traditionnelle",en:"Traditional dance show"}, meta:{fr:"Grand Théâtre de Tahiti",en:"Tahiti Grand Theatre"}, rating:4.9, price:4200, unit:"perPerson", cat:"Culture" },
+  { id:"act4", icon:"🐋", grad:"linear-gradient(150deg,#1C3B6E,#0B3D3A)", title:{fr:"Nage avec les baleines",en:"Swimming with whales"}, meta:{fr:"Moorea · Saison de juillet à octobre",en:"Moorea · July to October season"}, rating:4.9, price:14000, unit:"perPerson", cat:"Nautique" },
+];
+
+const lodging = [
+  { id:"lod1", icon:"🏝️", grad:"linear-gradient(150deg,#6FC7BE,#1C7A72)", title:{fr:"Bungalow sur pilotis",en:"Overwater bungalow"}, meta:{fr:"Punaauia · 2 pers.",en:"Punaauia · 2 guests"}, rating:4.9, price:28000,
+    type:{fr:"Bungalow",en:"Bungalow"}, guests:2, beds:{fr:"1 lit double",en:"1 double bed"}, minNights:2, maxNights:14, checkin:"15:00", checkout:"11:00",
+    cancel:{fr:"Annulation gratuite jusqu'à 7 jours avant l'arrivée.",en:"Free cancellation up to 7 days before arrival."},
+    rules:{fr:["Non-fumeur à l'intérieur","Pas de fête ni d'événement","Silence après 22 h"],en:["No smoking indoors","No parties or events","Quiet after 10 pm"]},
+    host:{ name:"Hina M.", initials:"H.M", since:2022, resp:{fr:"Répond en général sous 24 h",en:"Usually replies within 24 h"},
+      socials:[{n:"instagram",h:"@exemple.hina"},{n:"facebook",h:"facebook.com/exemple.hina"}] } },
+  { id:"lod2", icon:"🌴", grad:"linear-gradient(150deg,#D9A441,#9C6E22)", title:{fr:"Fare traditionnel",en:"Traditional fare"}, meta:{fr:"Mahina · 4 pers.",en:"Mahina · 4 guests"}, rating:4.6, price:12000,
+    type:{fr:"Fare",en:"Fare"}, guests:4, beds:{fr:"2 lits doubles",en:"2 double beds"}, minNights:3, maxNights:21, checkin:"14:00", checkout:"10:00",
+    cancel:{fr:"Annulation gratuite jusqu'à 14 jours avant l'arrivée.",en:"Free cancellation up to 14 days before arrival."},
+    rules:{fr:["Enfants bienvenus","Animaux sur demande","Silence après 21 h 30"],en:["Children welcome","Pets on request","Quiet after 9:30 pm"]},
+    host:{ name:"Teva R.", initials:"T.R", since:2021, resp:{fr:"Répond en général sous 12 h",en:"Usually replies within 12 h"},
+      socials:[{n:"facebook",h:"facebook.com/exemple.teva"},{n:"whatsapp",h:"+689 00 00 00 00"}] } },
+  { id:"lod3", icon:"🏠", grad:"linear-gradient(150deg,#1C7A72,#0B3D3A)", title:{fr:"Appartement vue mer",en:"Sea-view apartment"}, meta:{fr:"Papeete · 3 pers.",en:"Papeete · 3 guests"}, rating:4.4, price:15000,
+    type:{fr:"Appartement",en:"Apartment"}, guests:3, beds:{fr:"1 lit double + 1 lit simple",en:"1 double + 1 single bed"}, minNights:1, maxNights:30, checkin:"15:00", checkout:"11:00",
+    cancel:{fr:"Annulation gratuite jusqu'à 48 h avant l'arrivée.",en:"Free cancellation up to 48 h before arrival."},
+    rules:{fr:["Non-fumeur","Pas de fête","Arrivée autonome (boîte à clés)"],en:["No smoking","No parties","Self check-in (key box)"]},
+    host:{ name:"Maeva L.", initials:"M.L", since:2023, resp:{fr:"Répond en général sous 6 h",en:"Usually replies within 6 h"},
+      socials:[{n:"instagram",h:"@exemple.maeva"},{n:"whatsapp",h:"+689 00 00 00 00"}] } },
+  { id:"lod4", icon:"🏡", grad:"linear-gradient(150deg,#8FA86A,#4C6B3A)", title:{fr:"Villa avec piscine",en:"Villa with pool"}, meta:{fr:"Paea · 6 pers.",en:"Paea · 6 guests"}, rating:4.8, price:42000,
+    type:{fr:"Villa",en:"Villa"}, guests:6, beds:{fr:"3 chambres, 4 lits",en:"3 bedrooms, 4 beds"}, minNights:4, maxNights:28, checkin:"16:00", checkout:"10:00",
+    cancel:{fr:"Annulation gratuite jusqu'à 30 jours avant l'arrivée ; caution demandée.",en:"Free cancellation up to 30 days before arrival; deposit required."},
+    rules:{fr:["Piscine : enfants sous surveillance","Pas de fête ni d'événement","Caution à prévoir"],en:["Pool: children must be supervised","No parties or events","Deposit required"]},
+    host:{ name:"Tiare B.", initials:"T.B", since:2020, resp:{fr:"Répond en général sous 24 h",en:"Usually replies within 24 h"},
+      socials:[{n:"instagram",h:"@exemple.tiare"},{n:"facebook",h:"facebook.com/exemple.tiare"},{n:"web",h:"exemple-villa-paea.pf"}] } },
+];
+
+// Real named places (beaches researched by commune, real Papeete nightlife venues)
+const places = [
+  { id:"vaiava", cat:"Plage & lagon", name:"Vaiava", commune:{fr:"Punaauia · PK18",en:"Punaauia · PK18"}, icon:"🐚", grad:"linear-gradient(150deg,#6FC7BE,#1C7A72)",
+    tags:[{fr:"Sable blanc",en:"White sand"},{fr:"Eau calme",en:"Calm water"},{fr:"Parking sur place",en:"On-site parking"}],
+    desc:{fr:"Plage de sable blanc à l'eau calme, sur la côte ouest.", en:"White-sand beach with calm water, on the west coast."}, lat:-17.6234, lng:-149.5607 },
+  { id:"toaroto", cat:"Plage & lagon", name:"Toaroto", commune:{fr:"Punaauia · PK15,4",en:"Punaauia · PK15.4"}, icon:"🐚", grad:"linear-gradient(150deg,#6FC7BE,#2D8F86)",
+    tags:[{fr:"Sable blanc",en:"White sand"},{fr:"Eau calme",en:"Calm water"},{fr:"Parking sur place",en:"On-site parking"}],
+    desc:{fr:"Autre plage de sable blanc au lagon calme, un peu plus proche de Papeete que Vaiava.", en:"Another white-sand beach with a calm lagoon, a bit closer to Papeete than Vaiava."}, lat:-17.6104, lng:-149.5620 },
+  { id:"mahanapark", cat:"Plage & lagon", name:"Mahana Park", commune:{fr:"Punaauia",en:"Punaauia"}, icon:"🌴", grad:"linear-gradient(150deg,#8FA86A,#4C6B3A)",
+    tags:[{fr:"Sable blanc",en:"White sand"},{fr:"Eau calme",en:"Calm water"},{fr:"Aire de pique-nique",en:"Picnic area"}],
+    desc:{fr:"Espace public aménagé en bord de lagon, apprécié pour les pique-niques en famille.", en:"A public lagoon-front park, popular for family picnics."}, lat:-17.6009, lng:-149.5629 },
+  { id:"rohotu", cat:"Plage & lagon", name:"Rohotu", commune:{fr:"Paea · PK18-19",en:"Paea · PK18-19"}, icon:"🌅", grad:"linear-gradient(150deg,#D9A441,#9C6E22)",
+    tags:[{fr:"Sable noir/gris",en:"Black/grey sand"},{fr:"Eau calme",en:"Calm water"},{fr:"Parking sur place",en:"On-site parking"}],
+    desc:{fr:"Plage de sable noir/gris et calme, dans la commune de Paea.", en:"A calm black/grey sand beach in the Paea district."}, lat:-17.6259, lng:-149.5605 },
+  { id:"papehue", cat:"Plage & lagon", name:"Papehue", commune:{fr:"Paea · PK22",en:"Paea · PK22"}, icon:"🌅", grad:"linear-gradient(150deg,#D9A441,#B4432A)",
+    tags:[{fr:"Sable noir/gris",en:"Black/grey sand"},{fr:"Eau calme",en:"Calm water"},{fr:"Parking à proximité",en:"Nearby parking"}],
+    desc:{fr:"Plage calme de sable noir/gris, avec un parking à proximité.", en:"A calm black/grey sand beach, with parking nearby."}, lat:-17.6434, lng:-149.5587 },
+  { id:"taharuu", cat:"Plage & lagon", name:"Taharu'u", commune:{fr:"Papara · PK39",en:"Papara · PK39"}, icon:"🏄", grad:"linear-gradient(150deg,#243B34,#0B3D3A)",
+    tags:[{fr:"Sable noir",en:"Black sand"},{fr:"Vagues variables",en:"Variable waves"},{fr:"Parking sur place",en:"On-site parking"}],
+    desc:{fr:"Plage de sable noir réputée pour le surf, aux conditions de houle variables.", en:"Black-sand beach known for surfing, with variable swell conditions."}, lat:-17.7284, lng:-149.5502 },
+  { id:"atimaono", cat:"Plage & lagon", name:"Atimaono", commune:{fr:"Papara · PK41",en:"Papara · PK41"}, icon:"🏄", grad:"linear-gradient(150deg,#243B34,#1C3B34)",
+    tags:[{fr:"Sable noir",en:"Black sand"},{fr:"Vagues variables",en:"Variable waves"},{fr:"Parking sur place",en:"On-site parking"}],
+    desc:{fr:"Plage voisine de Taharu'u, sable noir et conditions de mer variables.", en:"Neighboring beach to Taharu'u, black sand and variable sea conditions."}, lat:-17.7384, lng:-149.5492 },
+  { id:"lafayette", cat:"Plage & lagon", name:"Lafayette", commune:{fr:"Arue · PK9",en:"Arue · PK9"}, icon:"🌊", grad:"linear-gradient(150deg,#1C2B3A,#0B3D3A)",
+    tags:[{fr:"Sable noir",en:"Black sand"},{fr:"Plutôt calme",en:"Fairly calm"},{fr:"Parking à proximité",en:"Nearby parking"}],
+    desc:{fr:"Plage de sable noir plutôt calme, non loin de Papeete.", en:"A fairly calm black-sand beach, close to Papeete."}, lat:-17.5001, lng:-149.4977 },
+  { id:"taharaa", cat:"Plage & lagon", name:"Tahara'a", commune:{fr:"Arue · PK8",en:"Arue · PK8"}, icon:"🌊", grad:"linear-gradient(150deg,#1C2B3A,#14201E)",
+    tags:[{fr:"Sable noir",en:"Black sand"},{fr:"Plutôt calme",en:"Fairly calm"},{fr:"Parking à proximité",en:"Nearby parking"}],
+    desc:{fr:"Plage de sable noir au pied de la colline de Tahara'a, connue pour son point de vue.", en:"Black-sand beach at the foot of Tahara'a hill, known for its viewpoint."}, lat:-17.5038, lng:-149.5057 },
+  { id:"pointevenus", cat:"Plage & lagon", name:"Pointe Vénus", commune:{fr:"Mahina · PK10",en:"Mahina · PK10"}, icon:"🌊", grad:"linear-gradient(150deg,#1C2B3A,#0B3D3A)",
+    tags:[{fr:"Sable noir",en:"Black sand"},{fr:"Eau calme",en:"Calm water"},{fr:"Parking sur place",en:"On-site parking"}],
+    desc:{fr:"Célèbre plage de sable noir où James Cook observa le passage de Vénus en 1769, face à Moorea, avec son phare historique.", en:"Famous black-sand beach where Cook observed the transit of Venus in 1769, facing Moorea, with its historic lighthouse."}, lat:-17.4964, lng:-149.4897 },
+  { id:"ahonu", cat:"Plage & lagon", name:"Ahonu", commune:{fr:"Mahina · PK12",en:"Mahina · PK12"}, icon:"🌊", grad:"linear-gradient(150deg,#1C7A72,#0B3D3A)",
+    tags:[{fr:"Sable noir",en:"Black sand"},{fr:"Vagues variables",en:"Variable waves"},{fr:"Parking à proximité",en:"Nearby parking"}],
+    desc:{fr:"Plage de sable noir aux vagues variables, dans le prolongement de Mahina.", en:"Black-sand beach with variable waves, further along the Mahina coast."}, lat:-17.4890, lng:-149.4737 },
+  { id:"hitimahana", cat:"Plage & lagon", name:"Hitimahana", commune:{fr:"Mahina · PK11",en:"Mahina · PK11"}, icon:"🌊", grad:"linear-gradient(150deg,#1C7A72,#14201E)",
+    tags:[{fr:"Sable noir",en:"Black sand"},{fr:"Vagues variables",en:"Variable waves"},{fr:"Parking à proximité",en:"Nearby parking"}],
+    desc:{fr:"Plage de sable noir aux conditions variables, entre Pointe Vénus et Ahonu.", en:"Black-sand beach with variable conditions, between Pointe Vénus and Ahonu."}, lat:-17.4927, lng:-149.4817 },
+  { id:"orofara", cat:"Plage & lagon", name:"Orofara", commune:{fr:"Mahina · PK9-10",en:"Mahina · PK9-10"}, icon:"🌊", grad:"linear-gradient(150deg,#1C7A72,#0B3D3A)",
+    tags:[{fr:"Sable noir",en:"Black sand"},{fr:"Vagues variables",en:"Variable waves"},{fr:"Parking à proximité",en:"Nearby parking"}],
+    desc:{fr:"Plage de sable noir aux vagues variables, à la limite entre Arue et Mahina.", en:"Black-sand beach with variable waves, on the Arue/Mahina boundary."}, lat:-17.4983, lng:-149.4937 },
+  { id:"papenoo", cat:"Plage & lagon", name:"Papenoo", commune:{fr:"Papenoo · PK17-18",en:"Papenoo · PK17-18"}, icon:"🌊", grad:"linear-gradient(150deg,#4C6B3A,#14201E)",
+    tags:[{fr:"Sable noir/galets",en:"Black sand/pebbles"},{fr:"Vagues",en:"Waves"},{fr:"Parking à proximité",en:"Nearby parking"}],
+    desc:{fr:"Grande plage de sable noir et de galets, avec des vagues, réputée pour le surf local.", en:"Large black-sand and pebble beach with waves, popular with local surfers."}, lat:-17.5123, lng:-149.4254 },
+  { id:"tiarei", cat:"Plage & lagon", name:"Tiarei", commune:{fr:"Tiarei · PK35",en:"Tiarei · PK35"}, icon:"🌊", grad:"linear-gradient(150deg,#0B3D3A,#14201E)",
+    tags:[{fr:"Sable noir",en:"Black sand"},{fr:"Vagues variables",en:"Variable waves"},{fr:"Parking aux environs",en:"Roadside parking nearby"}],
+    desc:{fr:"Plage de sable noir sur la côte est, aux vagues variables.", en:"Black-sand beach on the east coast, with variable waves."}, lat:-17.5800, lng:-149.2930 },
+  { id:"haapoponi", cat:"Plage & lagon", name:"Haapoponi", commune:{fr:"Tiarei · PK22",en:"Tiarei · PK22"}, icon:"🌊", grad:"linear-gradient(150deg,#0B3D3A,#1C2B3A)",
+    tags:[{fr:"Sable noir",en:"Black sand"},{fr:"Conditions variables",en:"Variable conditions"},{fr:"Parking aux environs",en:"Roadside parking nearby"}],
+    desc:{fr:"Plage de sable noir aux conditions changeantes, tantôt calme, tantôt agitée.", en:"Black-sand beach with changeable conditions, sometimes calm, sometimes rough."}, lat:-17.5217, lng:-149.3869 },
+  { id:"vairai", cat:"Plage & lagon", sand:"light", name:"Parc Vairai", commune:{fr:"Punaauia · PK9",en:"Punaauia · PK9"}, icon:"🐚", grad:"linear-gradient(150deg,#6FC7BE,#2D8F86)",
+    tags:[{fr:"Sable clair",en:"Light sand"},{fr:"Eau bien protégée",en:"Well-sheltered water"},{fr:"Parc aménagé",en:"Landscaped park"}],
+    desc:{fr:"Plage aménagée dans un parc spacieux, proche de la ville, avec un lagon bien protégé et des espaces de pique-nique.", en:"Beach in a spacious landscaped park close to town, with a well-sheltered lagoon and picnic areas."}, lat:-17.5870, lng:-149.6130 },
+  { id:"pomare", cat:"Plage & lagon", name:"Tombeau du roi Pomare V", commune:{fr:"Arue · PK7,4",en:"Arue · PK7.4"}, icon:"🌊", grad:"linear-gradient(150deg,#1C2B3A,#0B3D3A)",
+    tags:[{fr:"Sable noir",en:"Black sand"},{fr:"Eau calme",en:"Calm water"},{fr:"Parking",en:"Parking"}],
+    desc:{fr:"Plage de sable noir à l'eau calme, adaptée à la baignade, avec le tombeau du roi Pomare V en arrière-plan.", en:"Calm-water black-sand beach suitable for swimming, with the tomb of King Pomare V in the background."}, lat:-17.5265, lng:-149.5200 },
+  { id:"maui", cat:"Plage & lagon", name:"Plage de Maui", commune:{fr:"Toahotu · PK7,7 ouest",en:"Toahotu · PK7.7 west"}, icon:"🐚", grad:"linear-gradient(150deg,#6FC7BE,#1C7A72)",
+    tags:[{fr:"Sable blanc",en:"White sand"},{fr:"Eau turquoise",en:"Turquoise water"},{fr:"Restaurant à côté",en:"Restaurant next door"}],
+    desc:{fr:"Plage étroite en bord de route, au sable blanc et à l'eau turquoise (barrière de corail au large). Plus calme tôt le matin ; restaurant voisin, réservation conseillée.", en:"Narrow roadside beach with white sand and turquoise water (reef offshore). Quieter early in the morning; restaurant next door, booking advised."}, lat:-17.7690, lng:-149.2860 },
+  { id:"teahupoo", cat:"Plage & lagon", sand:"neutral", name:"Teahupo'o", commune:{fr:"Teahupo'o · PK0",en:"Teahupo'o · PK0"}, icon:"🏄", grad:"linear-gradient(150deg,#1C7A72,#14201E)",
+    tags:[{fr:"Bout de la route",en:"End of the road"},{fr:"Pique-nique possible",en:"Picnic possible"},{fr:"⚠ Poissons-pierre",en:"⚠ Stonefish"}],
+    desc:{fr:"Petite plage à la pointe, après le pont en bois. Pique-nique possible ; attention aux poissons-pierre : ne marchez jamais pieds nus dans l'eau peu profonde.", en:"Small beach at the point, past the wooden bridge. Picnicking possible; beware of stonefish: never walk barefoot in shallow water."}, lat:-17.8470, lng:-149.2610 },
+  { id:"tautira", cat:"Plage & lagon", sand:"neutral", name:"Tautira", commune:{fr:"Tautira · PK0 est",en:"Tautira · PK0 east"}, icon:"🌴", grad:"linear-gradient(150deg,#8FA86A,#4C6B3A)",
+    tags:[{fr:"Au bout de l'île",en:"End of the island"},{fr:"Douches et tables",en:"Showers and tables"},{fr:"Pétanque et jeux",en:"Pétanque and play areas"}],
+    desc:{fr:"Plage tranquille avec vue sur les montagnes et la vallée de la Vaitepiha ; douches, tables de pique-nique, terrains de jeux et de pétanque.", en:"Quiet beach with views of the mountains and the Vaitepiha valley; showers, picnic tables, play areas and a pétanque court."}, lat:-17.7370, lng:-149.1580 },
+  { id:"3b", cat:"Nightlife", name:"Les 3 Brasseurs", commune:{fr:"Papeete · Front de mer",en:"Papeete · Waterfront"}, icon:"🍺", grad:"linear-gradient(150deg,#E8613F,#B4432A)",
+    desc:{fr:"Brasserie du front de mer avec concerts locaux et ambiance conviviale.", en:"Waterfront brewpub with local concerts and a friendly vibe."}, lat:-17.5347, lng:-149.5693 },
+  { id:"bh", cat:"Nightlife", name:"Brasserie Hoa", commune:{fr:"Papeete centre",en:"Papeete downtown"}, icon:"🎸", grad:"linear-gradient(150deg,#D9A441,#9C6E22)",
+    desc:{fr:"Bar apprécié pour ses concerts de groupes locaux en soirée.", en:"A bar known for its evening live sets by local bands."}, lat:-17.5361, lng:-149.5697 },
+  { id:"lr", cat:"Nightlife", name:"Le Rétro", commune:{fr:"Papeete centre",en:"Papeete downtown"}, icon:"🥂", grad:"linear-gradient(150deg,#1C7A72,#0B3D3A)",
+    desc:{fr:"Bar historique du centre-ville, une institution de la vie nocturne locale.", en:"A historic downtown bar, an institution of local nightlife."}, lat:-17.5355, lng:-149.5701 },
+  { id:"ip", cat:"Nightlife", name:"L'Instant Présent", commune:{fr:"Papeete",en:"Papeete"}, icon:"💃", grad:"linear-gradient(150deg,#8E4585,#4A2145)",
+    desc:{fr:"Dîner-spectacle mêlant musique live et danse.", en:"Dinner show combining live music and dance."}, lat:-17.5370, lng:-149.5688 },
+  { id:"morison", cat:"Nightlife", name:"Le Morison", commune:{fr:"Papeete · Front de mer",en:"Papeete · Waterfront"}, icon:"🍸", grad:"linear-gradient(150deg,#1C7A72,#14201E)",
+    desc:{fr:"Bar du front de mer de Papeete, ambiance conviviale en soirée.", en:"Waterfront bar in Papeete with a friendly evening atmosphere."}, lat:-17.5349, lng:-149.5699 },
+  { id:"perchoir", cat:"Nightlife", name:"Le Perchoir", commune:{fr:"Papeete",en:"Papeete"}, icon:"🌃", grad:"linear-gradient(150deg,#D9A441,#8E4585)",
+    desc:{fr:"Bar de Papeete, apprécié pour son ambiance en soirée.", en:"A Papeete bar, popular for its evening atmosphere."}, lat:-17.5358, lng:-149.5685 },
+];
+
+// ---- Photos : un seul endroit à remplir (voir le dossier photos) ----
+// Format : id du lieu → liste de { src, credit }. Exemple : vaiava:[{ src:'photos/vaiava-1.jpg', credit:'© Prénom Nom (autorisé)' }]
+// Tant qu'aucune photo n'est renseignée, l'appli affiche une illustration. N'ajoutez que des photos dont vous avez les droits.
+const PHOTOS = {
+};
+[...places, ...lodging].forEach(it => { if(PHOTOS[it.id] && PHOTOS[it.id].length) it.photos = PHOTOS[it.id]; });
+
+const transportOptions = [
+  { id:"tr1", commune:{fr:"Faa'a (aéroport) → Papeete",en:"Faa'a (airport) → Papeete"}, icon:"🚐", title:{fr:"Navette aéroport – Papeete",en:"Airport shuttle – Papeete"}, desc:{fr:"Départs toutes les 20 minutes, arrêt à votre hébergement.",en:"Departures every 20 minutes, drop-off at your stay."}, eta:"6", price:1200 },
+  { id:"tr2", commune:{fr:"Papeete et alentours",en:"Papeete and surroundings"}, icon:"🚕", title:{fr:"Taxi à proximité",en:"Nearby taxi"}, desc:{fr:"Taxis disponibles sur l'île — durée d'attente donnée à titre d'exemple.",en:"Taxis available across the island — wait time shown as an example."}, eta:"4", price:900, approx:true },
+  { id:"tr3", commune:{fr:"Papeete (Vaima)",en:"Papeete (Vaima)"}, icon:"🛵", title:{fr:"Location de scooter",en:"Scooter rental"}, desc:{fr:"Agence Vaima, casque et assurance inclus.",en:"Vaima agency, helmet and insurance included."}, eta:"15", price:3500, perDay:true },
+  { id:"tr4", commune:{fr:"Faa'a (aéroport)",en:"Faa'a (airport)"}, icon:"🚗", title:{fr:"Location de véhicule",en:"Car rental"}, desc:{fr:"Retrait à l'aéroport, kilométrage illimité.",en:"Airport pickup, unlimited mileage."}, eta:"20", price:7900, perDay:true },
+];
+
+const GUIDE_CATS = [
+  { id:"culture", icon:"🏛️", fr:"Guide culturel et patrimonial", en:"Cultural & heritage guide" },
+  { id:"nature", icon:"🥾", fr:"Guide nature et randonnée", en:"Nature & hiking guide" },
+  { id:"nautique", icon:"🌊", fr:"Guide nautique et lagonnaire", en:"Water & lagoon guide" },
+  { id:"gastro", icon:"🍽️", fr:"Guide gastronomique", en:"Food guide" },
+  { id:"urbain", icon:"🌆", fr:"Guide urbain et local", en:"Urban & local guide" },
+  { id:"experientiel", icon:"✨", fr:"Guide expérientiel", en:"Experiential guide" },
+];
+const SOC = { instagram:{label:"Instagram", ab:"IG"}, facebook:{label:"Facebook", ab:"f"}, tiktok:{label:"TikTok", ab:"TT"}, whatsapp:{label:"WhatsApp", ab:"WA"}, web:{label:"Site web", ab:"🌐"} };
+const R24 = {fr:"Répond en général sous 24 h",en:"Usually replies within 24 h"};
+// Profils d'exemple : comptes et numéros fictifs (aucun compte réel).
+const guides = [
+  { id:"gd1", cat:"nature", also:["culture"], initials:"H.T", grad:"linear-gradient(150deg,#1C7A72,#0B3D3A)", name:"Heirani T.", langs:{fr:"Français · Anglais · Tahitien",en:"French · English · Tahitian"}, tags:{fr:["Randonnée","Vallées","Histoire des lieux"],en:["Hiking","Valleys","Local history"]}, rating:4.9, price:8000,
+    bio:{fr:"Randonnées dans les vallées de Tahiti, avec l'histoire et les légendes des lieux traversés.",en:"Hikes through Tahiti's valleys, with the history and legends of the places you cross."},
+    contact:{ resp:R24, socials:[{n:"instagram",h:"@exemple.heirani"},{n:"facebook",h:"facebook.com/exemple.heirani"},{n:"whatsapp",h:"+689 00 00 00 00"}] } },
+  { id:"gd7", cat:"culture", also:[], initials:"R.A", grad:"linear-gradient(150deg,#8E4585,#4A2145)", name:"Rauti A.", langs:{fr:"Français · Tahitien",en:"French · Tahitian"}, tags:{fr:["Marae","Histoire polynésienne","Tahitien"],en:["Marae","Polynesian history","Tahitian"]}, rating:4.8, price:7000,
+    bio:{fr:"Visites des sites culturels et des marae, récits d'histoire polynésienne et initiation à quelques mots de tahitien.",en:"Visits to cultural sites and marae, Polynesian history storytelling and a few words of Tahitian."},
+    contact:{ resp:R24, socials:[{n:"facebook",h:"facebook.com/exemple.rauti"},{n:"whatsapp",h:"+689 00 00 00 00"}] } },
+  { id:"gd2", cat:"nautique", also:[], initials:"M.R", grad:"linear-gradient(150deg,#1C3B6E,#0B3D3A)", name:"Manoa R.", langs:{fr:"Français · Anglais",en:"French · English"}, tags:{fr:["Sorties en mer","Snorkeling","Pirogue"],en:["Boat trips","Snorkeling","Outrigger canoe"]}, rating:4.7, price:6500,
+    bio:{fr:"Sorties en mer et en pirogue, snorkeling dans les coins calmes du lagon.",en:"Boat and outrigger trips, snorkeling in the calm corners of the lagoon."},
+    contact:{ resp:{fr:"Répond en général sous 12 h",en:"Usually replies within 12 h"}, socials:[{n:"instagram",h:"@exemple.manoa"},{n:"tiktok",h:"@exemple.manoa"},{n:"whatsapp",h:"+689 00 00 00 00"}] } },
+  { id:"gd3", cat:"nautique", also:[], initials:"V.P", grad:"linear-gradient(150deg,#D9A441,#9C6E22)", name:"Vaiana P.", langs:{fr:"Anglais · Tahitien",en:"English · Tahitian"}, tags:{fr:["Plage & lagon","Pique-nique sur motu"],en:["Beach & lagoon","Motu picnic"]}, rating:5.0, price:7200,
+    bio:{fr:"Journées plage et lagon : meilleurs spots, marées et pique-nique sur un motu.",en:"Beach and lagoon days: best spots, tides and a picnic on a motu."},
+    contact:{ resp:R24, socials:[{n:"instagram",h:"@exemple.vaiana"},{n:"facebook",h:"facebook.com/exemple.vaiana"}] } },
+  { id:"gd4", cat:"gastro", also:[], initials:"T.L", grad:"linear-gradient(150deg,#E8613F,#B4432A)", name:"Teiva L.", langs:{fr:"Français · Anglais",en:"French · English"}, tags:{fr:["Marché de Papeete","Cuisine tahitienne","Dégustation"],en:["Papeete market","Tahitian cuisine","Tasting"]}, rating:4.8, price:6000,
+    bio:{fr:"Tour du marché, produits locaux et dégustation de plats tahitiens (poisson cru, fruits, poulet fafa).",en:"Market tour, local produce and a tasting of Tahitian dishes (raw fish, fruit, fafa chicken)."},
+    contact:{ resp:{fr:"Répond en général sous 12 h",en:"Usually replies within 12 h"}, socials:[{n:"instagram",h:"@exemple.teiva"},{n:"tiktok",h:"@exemple.teiva"},{n:"whatsapp",h:"+689 00 00 00 00"}] } },
+  { id:"gd5", cat:"urbain", also:["gastro"], initials:"M.K", grad:"linear-gradient(150deg,#1C7A72,#14201E)", name:"Moana K.", langs:{fr:"Français · Anglais",en:"French · English"}, tags:{fr:["Papeete à pied","Street art","Vie nocturne locale"],en:["Papeete on foot","Street art","Local nightlife"]}, rating:4.6, price:5500,
+    bio:{fr:"Papeete à pied : quartiers, fresques, bonnes adresses et soirée dans les bars appréciés des habitants.",en:"Papeete on foot: neighbourhoods, murals, good addresses and an evening in bars locals like."},
+    contact:{ resp:R24, socials:[{n:"instagram",h:"@exemple.moana"},{n:"facebook",h:"facebook.com/exemple.moana"}] } },
+  { id:"gd6", cat:"experientiel", also:["culture"], initials:"T.M", grad:"linear-gradient(150deg,#D9A441,#8E4585)", name:"Tehani M.", langs:{fr:"Français · Anglais · Tahitien",en:"French · English · Tahitian"}, tags:{fr:["Four tahitien (ahima'a)","Tressage","Pêche traditionnelle"],en:["Tahitian oven (ahima'a)","Weaving","Traditional fishing"]}, rating:4.9, price:9000,
+    bio:{fr:"Immersion chez l'habitant : préparer un four tahitien, tresser des feuilles de pandanus, pêcher comme autrefois.",en:"Home-stay style immersion: prepare a Tahitian oven, weave pandanus leaves, fish the traditional way."},
+    contact:{ resp:{fr:"Répond en général sous 48 h",en:"Usually replies within 48 h"}, socials:[{n:"facebook",h:"facebook.com/exemple.tehani"},{n:"instagram",h:"@exemple.tehani"},{n:"whatsapp",h:"+689 00 00 00 00"}] } },
+];
+
+function t(key){ return dict[key][lang]; }
+
+// Devise (XPF = franc pacifique, arrimé officiellement à 119,3317 pour 1 EUR ; les autres taux sont indicatifs, non temps réel)
+const FX = { XPF:1, EUR:1/119.3317, USD:1.15/119.3317, CAD:1.61/119.3317, CHF:0.94/119.3317 };
+const CUR_SYM = { XPF:'XPF', EUR:'€', USD:'$', CAD:'CA$', CHF:'CHF' };
+let currency = store.getItem('manava_currency_v1') || 'XPF';
+function fmt(xpf){
+  const v = xpf*FX[currency];
+  if(currency==='XPF') return Math.round(v).toLocaleString('fr-FR')+' XPF';
+  return CUR_SYM[currency]+v.toFixed(2);
+}
+function renderCurrencyList(){
+  document.getElementById('currency-list').innerHTML = Object.keys(FX).map(c => `<button class="chip ${c===currency?'active':''}" style="width:100%;margin-bottom:9px;text-align:left" data-cur="${c}">${c} — ${CUR_SYM[c]}</button>`).join('');
+  document.querySelectorAll('[data-cur]').forEach(b => b.addEventListener('click', () => {
+    currency = b.getAttribute('data-cur'); store.setItem('manava_currency_v1', currency);
+    document.getElementById('currency-btn').textContent = currency+' ▾';
+    document.getElementById('currency-sheet-backdrop').classList.remove('open');
+    renderDeals(); renderDealsScreen(); renderHomeReco(); renderExplore(); renderTransport(); renderGuides(); renderLodging(); renderFavoris(); renderReservations();
+  }));
+}
+document.getElementById('currency-btn').addEventListener('click', () => { renderCurrencyList(); document.getElementById('currency-sheet-backdrop').classList.add('open'); });
+document.getElementById('currency-close').addEventListener('click', () => document.getElementById('currency-sheet-backdrop').classList.remove('open'));
+document.getElementById('currency-sheet-backdrop').addEventListener('click', e => { if(e.target.id==='currency-sheet-backdrop') e.currentTarget.classList.remove('open'); });
+
+// Favoris (plages/lieux + hébergements)
+function loadFavs(){ try { return JSON.parse(store.getItem('manava_favs_v1')||'[]'); } catch(e){ return []; } }
+function isFav(type,id){ return loadFavs().includes(type+':'+id); }
+function toggleFav(type,id){
+  let favs = loadFavs(); const key = type+':'+id;
+  favs = favs.includes(key) ? favs.filter(f=>f!==key) : [...favs, key];
+  store.setItem('manava_favs_v1', JSON.stringify(favs));
+}
+const HEART_PATH = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
+function heartSvg(on){ return `<svg viewBox="0 0 24 24" aria-hidden="true" fill="${on?'currentColor':'none'}" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"><path d="${HEART_PATH}"/></svg>`; }
+function heartBtn(type,id){
+  const on = isFav(type,id);
+  return `<button class="heart-btn ${on?'active':''}" data-fav="${id}" data-favtype="${type}" aria-label="${L('Favori','Favorite')}" aria-pressed="${on}">${heartSvg(on)}</button>`;
+}
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-fav]');
+  if(!btn) return;
+  const type = btn.getAttribute('data-favtype'), id = btn.getAttribute('data-fav');
+  toggleFav(type, id);
+  const on = isFav(type, id);
+  document.querySelectorAll('[data-fav="'+id+'"][data-favtype="'+type+'"]').forEach(b => { b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); b.innerHTML = heartSvg(on); });
+  if(document.getElementById('screen-favoris').classList.contains('active')) renderFavoris();
+});
+function bindHeartButtons(){}
+
+function renderDeals(){
+  const row = document.getElementById('deals-row');
+  row.innerHTML = deals.map(d => `
+    <div class="deal-card" style="background:${d.grad}">
+      <span class="tag">${d.tag[lang]}</span><span class="tag" style="position:absolute;top:14px;right:12px">${L('Exemple','Sample')}</span><h3>${d.title[lang]}</h3>
+      <div class="price"><span class="old">${fmt(d.oldPrice)}</span>${fmt(d.price)}</div>
+    </div>`).join('');
+  requestAnimationFrame(updateDealsScale);
+}
+
+function renderDealsScreen(){
+  const d = new Date();
+  const dateTxt = d.toLocaleDateString(lang==='fr'?'fr-FR':'en-US', { weekday:'long', day:'numeric', month:'long' });
+  document.getElementById('deals-date').textContent = dateTxt.charAt(0).toUpperCase()+dateTxt.slice(1) + ' · ' + L("offres d'exemple valables aujourd'hui","sample offers valid today");
+  document.getElementById('deals-list').innerHTML = deals.map(x => `
+    <div class="deal-card wide" style="background:${x.grad}">
+      <span class="tag">${x.tag[lang]}</span><span class="tag" style="position:absolute;top:16px;right:14px">${L('Exemple','Sample')}</span>
+      <h3>${x.title[lang]}</h3>
+      <div class="row"><div class="price"><span class="old">${fmt(x.oldPrice)}</span>${fmt(x.price)} <span style="opacity:.8;font-size:12px">${t(x.unit)}</span></div>
+      <button class="btn-reserve" data-book-label="${esc(x.title[lang])}" data-book-xpf="${x.price}" data-book-unit="${x.unit}">${t('reserve')}</button></div>
+    </div>`).join('');
+}
+function updateDealsScale(){
+  const row = document.getElementById('deals-row');
+  const rect = row.getBoundingClientRect();
+  const center = rect.left + rect.width/2;
+  [...row.children].forEach(card => {
+    const cr = card.getBoundingClientRect();
+    const cCenter = cr.left + cr.width/2;
+    const norm = Math.min(Math.abs(center-cCenter)/(rect.width/2 || 1), 1);
+    const scale = 1.1 - norm*0.3;
+    card.style.transform = `scale(${scale.toFixed(3)})`;
+    card.style.opacity = (1-norm*0.12).toFixed(2);
+    card.style.filter = `brightness(${(1.1-norm*0.1).toFixed(2)}) saturate(${(1.12-norm*0.1).toFixed(2)})`;
+    card.style.boxShadow = `0 14px 34px rgba(217,164,65,${(0.5*(1-norm)).toFixed(2)}), 0 0 0 1px rgba(255,255,255,${(0.35*(1-norm)).toFixed(2)})`;
+  });
+}
+document.getElementById('deals-row').addEventListener('scroll', () => requestAnimationFrame(updateDealsScale));
+window.addEventListener('resize', updateDealsScale);
+
+function renderHomeCats(){
+  const wrap = document.getElementById('home-cats');
+  wrap.innerHTML = categories.map(c => `<button class="chip">${c[lang]}</button>`).join('');
+  wrap.querySelectorAll('.chip').forEach((btn,i) => btn.addEventListener('click', () => openCategory(categories[i].fr)));
+}
+
+const CAT_ICONS = { "Plage & lagon":"🏖️", "Randonnée":"🥾", "Nightlife":"🍹", "Culture":"🎭", "Nautique":"🌊" };
+function renderMenu(){
+  const extra = [
+    { fr:"Hébergements", en:"Stays", icon:"🛏️", go:"hebergement" },
+    { fr:"Transport", en:"Transport", icon:"🚐", go:"transport" },
+    { fr:"Guides locaux", en:"Local guides", icon:"🧭", go:"guides" },
+    { fr:"Devenir partenaire", en:"Become a partner", icon:"🤝", go:"partner" },
+  ];
+  const catRows = categories.map(c => `<button class="menu-row" data-cat="${c.fr}"><span class="mr-ic">${CAT_ICONS[c.fr]}</span>${c[lang]}<span class="mr-chev">›</span></button>`).join('');
+  const extraRows = extra.map(e => `<button class="menu-row" data-go="${e.go}"><span class="mr-ic">${e.icon}</span>${e[lang]}<span class="mr-chev">›</span></button>`).join('');
+  document.getElementById('menu-list').innerHTML = catRows + extraRows;
+  document.querySelectorAll('#menu-list [data-cat]').forEach(b => b.addEventListener('click', () => openCategory(b.getAttribute('data-cat'))));
+  document.querySelectorAll('#menu-list [data-go]').forEach(b => b.addEventListener('click', () => goTo(b.getAttribute('data-go'))));
+}
+
+function activityCard(a){
+  return `<div class="card">
+    <div class="thumb" style="background:${a.grad};font-size:28px">${thumbInner(a)}</div>
+    <div class="card-body">
+      <div class="card-top"><h3>${a.title[lang]}</h3><span class="demo-pill">${L('Exemple','Sample')}</span></div>
+      <div class="card-meta">${a.meta[lang]}</div>
+      <div class="card-bottom"><div class="price-tag">${fmt(a.price)} <span>${t(a.unit)}</span></div>
+      <div style="display:flex;gap:8px;align-items:center">${heartBtn('activity',a.id)}<button class="btn-reserve" data-book-label="${a.title[lang]}" data-book-xpf="${a.price}" data-book-unit="perPerson">${t('book')}</button></div></div>
+    </div></div>`;
+}
+
+function placeCard(p){
+  const tagsHtml = p.tags ? `<div class="guide-tags" style="margin:6px 0 0">${p.tags.map(x=>`<span>${x[lang]}</span>`).join('')}</div>` : '';
+  return `<div class="card">
+    <div class="thumb" style="background:${p.grad};font-size:28px">${thumbInner(p)}</div>
+    <div class="card-body">
+      <div class="card-top"><h3>${p.name}</h3></div>
+      <div class="card-meta">${p.commune[lang]}</div>
+      ${tagsHtml}
+      <div class="card-bottom" style="justify-content:flex-end">
+      <div style="display:flex;gap:8px;align-items:center">${heartBtn('place',p.id)}<button class="btn-mini" data-place="${p.id}">${t('discover')}</button></div></div>
+    </div></div>`;
+}
+
+function lodgingCard(l){
+  const nTxt = `${l.minNights}–${l.maxNights} ${L('nuits','nights')}`;
+  return `<div class="card">
+    <div class="thumb tap" data-lodging="${l.id}" style="background:${l.grad};font-size:28px">${thumbInner(l)}</div>
+    <div class="card-body">
+      <div class="card-top"><h3 class="tap" data-lodging="${l.id}">${l.title[lang]}</h3><span class="demo-pill">${L('Exemple','Sample')}</span></div>
+      <div class="card-meta">${l.meta[lang]}</div>
+      <div class="guide-tags" style="margin:6px 0 0"><span>🌙 ${nTxt}</span><span>📷 ${lodgingSlides(l).length} ${L('photos','photos')}</span></div>
+      <div class="card-bottom"><div class="price-tag">${fmt(l.price)} <span>${t('perNight')}</span></div>
+      <div style="display:flex;gap:8px;align-items:center">${heartBtn('lodging',l.id)}<button class="btn-mini" data-lodging="${l.id}">${L('Détails','Details')}</button><button class="btn-reserve" data-book-label="${l.title[lang]}" data-book-xpf="${l.price}" data-book-unit="perNight" data-book-min="${l.minNights}" data-book-max="${l.maxNights}">${t('reserve')}</button></div></div>
+    </div></div>`;
+}
+
+// Randonnées sans guide
+const trails = [
+  { id:"tr-vaipahi", tier:"easy", name:"Jardins d'eau de Vaipahi", commune:{fr:"Mataiea",en:"Mataiea"}, duration:"2h", distance:"5 – 5,5 km", elevation:"+280 m", q:"Jardins de Vaipahi Tahiti",
+    desc:{fr:"Balade tranquille au milieu d'une végétation tropicale riche et de bassins d'eau.", en:"A gentle walk through lush tropical vegetation and water pools."} },
+  { id:"tr-mission", tier:"easy", name:"La Croix de la Mission", duration:"3h30", distance:"≈ 9,5 km", elevation:"+600 m", q:"Croix de la Mission randonnée Tahiti",
+    desc:{fr:"Point de vue sur Papeete et la côte, entre nature et histoire, sur un chemin balisé (boucles plus courtes possibles).", en:"Viewpoint over Papeete and the coast, mixing nature and history on a marked trail (shorter loops possible)."} },
+  { id:"tr-millesources", tier:"easy", name:"Randonnée des Mille Sources", duration:"4h", distance:"14 km", elevation:"+300 m", q:"Mille Sources randonnée Tahiti",
+    desc:{fr:"Piste large et régulière avec une montée douce, idéale pour une longue marche sans technicité.", en:"A wide, regular track with a gentle climb, ideal for a long walk with no technical difficulty."} },
+  { id:"tr-fautaua", tier:"medium", name:"Vallée de la Fautaua (Cascade de Loti)", commune:{fr:"Papeete",en:"Papeete"}, duration:"≈ 5h A/R", distance:"15 – 17 km", note:{fr:"Difficulté modérée à sportive",en:"Moderate to athletic"}, q:"Cascade de Loti Fautaua Tahiti",
+    desc:{fr:"Mène au pied de la cascade de Loti (135 m) avec des zones de baignade.", en:"Leads to the foot of the 135 m Loti waterfall, with swimming spots."},
+    permit:{fr:"Permis payant obligatoire (≈ 600 XPF/pers.) auprès de la mairie de Papeete. À éviter par temps de pluie.", en:"Paid permit required (≈ 600 XPF/person) from Papeete town hall. Avoid in rainy weather."} },
+  { id:"tr-vaitavere", tier:"medium", name:"Vaitavere", commune:{fr:"Punaauia",en:"Punaauia"}, duration:"4h20", distance:"8 km A/R", elevation:"+700 m", q:"Vaitavere Punaauia randonnée Tahiti",
+    desc:{fr:"Montée continue offrant de superbes panoramas sur Moorea et le plateau des orangers.", en:"A steady climb with superb views over Moorea and the orange-grove plateau."} },
+  { id:"tr-aorai", tier:"hard", name:"Mont Aorai", commune:{fr:"Pirae",en:"Pirae"}, duration:"≈ 12h", distance:"18 km", elevation:"+2 000 m", altitude:"2 066 m", q:"Mont Aorai Tahiti",
+    desc:{fr:"L'un des plus hauts sommets de l'île. Réservé aux randonneurs expérimentés (engagement physique, crêtes vertigineuses).", en:"One of the island's highest peaks. For experienced hikers only (physically demanding, exposed ridges)."} },
+  { id:"tr-marau", tier:"hard", name:"Mont Marau", distance:"≈ 18 km A/R", altitude:"≈ 1 493 m", q:"Mont Marau Tahiti",
+    desc:{fr:"Panorama spectaculaire à 360° sur les crêtes et les vallées de l'intérieur de l'île.", en:"Spectacular 360° panorama over the ridges and valleys of the island's interior."} },
+  { id:"tr-hitiaa", tier:"hard", strong:true, name:"Lavatubes de Hitiaa (Vallée de la Fara'ura)", commune:{fr:"Hitiaa",en:"Hitiaa"}, duration:"6h – 7h", note:{fr:"Journée complète en jungle",en:"Full day in the jungle"}, q:"Lavatubes Hitiaa Fara'ura Tahiti",
+    desc:{fr:"Exploration de tunnels de lave et de plusieurs cascades.", en:"Exploration of lava tubes and several waterfalls."} },
+];
+const TIER_LABEL = { easy:{fr:"Facile",en:"Easy"}, medium:{fr:"Niveau moyen",en:"Medium"}, hard:{fr:"Difficile",en:"Hard"} };
+function mapsLink(q){ return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q); }
+function trailCard(tr){
+  const chips = [tr.duration?'⏱ '+tr.duration:'', tr.distance?'📏 '+tr.distance:'', tr.elevation?'⛰ D+ '+tr.elevation:'', tr.altitude?'🏔 '+tr.altitude:'', tr.note?tr.note[lang]:''].filter(Boolean);
+  const guideTxt = tr.tier==='hard' ? (tr.strong ? (lang==='fr'?'Guide fortement conseillé':'Guide strongly advised') : (lang==='fr'?'Guide souvent recommandé':'Guide often recommended')) : '';
+  return `<div class="card" style="display:block">
+    <div class="card-top"><h3>${tr.name}</h3><div class="rating">${TIER_LABEL[tr.tier][lang]}</div></div>
+    ${tr.commune?`<div class="card-meta">${tr.commune[lang]}</div>`:''}
+    <div class="guide-tags" style="margin:10px 0 8px">${chips.map(c=>`<span>${c}</span>`).join('')}${guideTxt?`<span>${guideTxt}</span>`:''}</div>
+    <p style="font-size:12.5px;opacity:.75;line-height:1.5;margin:0 0 10px">${tr.desc[lang]}</p>
+    ${tr.permit?`<p style="font-size:12px;line-height:1.45;margin:0 0 10px;color:var(--warn)">⚠ ${tr.permit[lang]}</p>`:''}
+    <div class="card-bottom" style="margin-top:6px">
+      <a class="btn-mini" style="text-decoration:none;display:inline-block" href="${mapsLink(tr.q)}" target="_blank" rel="noopener">${lang==='fr'?'Voir l\'itinéraire':'View route'}</a>
+      ${heartBtn('trail',tr.id)}
+    </div></div>`;
+}
+
+let lodgQuery = '';
+function renderLodging(){
+  const list = lodging.filter(l => !lodgQuery || norm(l.title[lang]+' '+l.meta[lang]).includes(norm(lodgQuery)));
+  document.getElementById('lodging-list').innerHTML = list.length ? list.map(lodgingCard).join('') : `<div class="empty-note">${lang==='fr'?'Aucun résultat.':'No results.'}</div>`;
+  bindBookButtons();
+}
+function favItems(){
+  const out = [];
+  loadFavs().forEach(key => {
+    const i = key.indexOf(':'); const type = key.slice(0,i), id = key.slice(i+1);
+    if(type==='place'){ const x = places.find(v=>v.id===id); if(x) out.push({ key, name:x.name, sub:x.commune[lang], html:placeCard(x) }); }
+    if(type==='lodging'){ const x = lodging.find(v=>v.id===id); if(x) out.push({ key, name:x.title[lang], sub:x.meta[lang], html:lodgingCard(x) }); }
+    if(type==='activity'){ const x = activities.find(v=>v.id===id); if(x) out.push({ key, name:x.title[lang], sub:x.meta[lang], html:activityCard(x) }); }
+    if(type==='trail'){ const x = trails.find(v=>v.id===id); if(x) out.push({ key, name:x.name, sub:x.commune?x.commune[lang]:TIER_LABEL[x.tier][lang], html:trailCard(x) }); }
+  });
+  return out;
+}
+function loadPlan(){ try { const p = JSON.parse(store.getItem('manava_plan_v2')||'{}'); return (p && typeof p==='object') ? p : {}; } catch(e){ return {}; } }
+function savePlan(p){ store.setItem('manava_plan_v2', JSON.stringify(p)); }
+let favView = 'list', favBusy = false, dlCap = null;
+(async () => { try { if(window.claude && typeof claude.use==='function') dlCap = await claude.use('downloads'); } catch(e){ dlCap = null; } if(dlCap && document.getElementById('screen-favoris').classList.contains('active')) renderFavoris(); })();
+
+const locale = () => lang==='fr' ? 'fr-FR' : 'en-US';
+const fmtLong = iso => { const x = new Date(iso+'T12:00:00').toLocaleDateString(locale(), { weekday:'long', day:'numeric', month:'long' }); return x.charAt(0).toUpperCase()+x.slice(1); };
+const fmtShort = iso => new Date(iso+'T12:00:00').toLocaleDateString(locale(), { weekday:'short', day:'numeric', month:'short' });
+const validIso = x => /^\d{4}-\d{2}-\d{2}$/.test(x||'');
+
+function favListHtml(){
+  const items = favItems();
+  return items.length ? items.map(i => i.html).join('') : `<div class="empty-note">${t('noFavoris')}</div>`;
+}
+function favPlanHtml(){
+  const items = favItems();
+  if(!items.length) return `<div class="empty-note">${L("Ajoutez d'abord des favoris avec le cœur (plages, hébergements, activités, randonnées), puis donnez-leur une date ici pour construire votre voyage.","First add favorites with the heart (beaches, stays, activities, hikes), then give them a date here to build your trip.")}</div>`;
+  const plan = loadPlan(), today = isoLocal(new Date()), tomorrow = addDays(today,1);
+  const dated = items.filter(i => validIso(plan[i.key])).sort((a,b) => plan[a.key].localeCompare(plan[b.key]) || a.name.localeCompare(b.name));
+  const groups = [];
+  dated.forEach(i => { const d = plan[i.key]; let g = groups.find(x => x.d===d); if(!g){ g = { d, items:[] }; groups.push(g); } g.items.push(i); });
+  const badge = d => d===today ? L("Aujourd'hui","Today") : d===tomorrow ? L('Demain','Tomorrow') : d<today ? L('Passé','Past') : '';
+  const remind = d => { if(d<today) return ''; const r = addDays(d,-1); return r<today ? '' : `<div class="plan-remind">🔔 ${L('Rappel la veille','Reminder the day before')} · ${fmtShort(r)}</div>`; };
+  const program = groups.length
+    ? groups.map(g => `<div class="plan-day"><h4>${fmtLong(g.d)}${badge(g.d)?` <span class="res-badge">${badge(g.d)}</span>`:''}</h4>${g.items.map(i => `<div>${esc(i.name)}</div>`).join('')}${remind(g.d)}</div>`).join('')
+    : `<p style="margin:0">${L("Choisissez une date pour chacun de vos favoris ci-dessous.","Pick a date for each of your favorites below.")}</p>`;
+  const exportBtn = (dlCap && groups.length) ? `<button class="btn-ghost" data-act="ics" style="margin-top:4px">${L('Ajouter au calendrier (rappel la veille)','Add to calendar (day-before reminder)')}</button><div class="msg" id="ics-msg" style="margin-top:8px"></div>` : '';
+  return `<div class="panel"><h3>${L('Mon programme','My itinerary')}</h3>${program}</div>
+    <div class="panel"><h3>${L('Rappel la veille','Day-before reminder')}</h3>
+      <p style="margin:0 0 ${exportBtn?10:0}px">${L("La veille d'une activité, Manava vous la rappelle en haut de l'accueil dès que vous ouvrez l'appli. Pour être prévenu même sans ouvrir l'appli, ajoutez le programme à votre calendrier : un rappel est programmé la veille à 9 h.","The day before an activity, Manava reminds you at the top of Home as soon as you open the app. To be notified even without opening the app, add the itinerary to your calendar: a reminder is set the day before at 9 am.")}</p>${exportBtn}</div>
+    <div class="section-title" style="margin:20px 0 10px"><h2 style="font-size:16px">${L('Planifier mes favoris','Plan my favorites')}</h2></div>` +
+    items.map(i => `<div class="panel" style="padding:12px 14px"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><div style="min-width:0"><div style="font-weight:700;font-size:14.5px">${esc(i.name)}</div><div class="card-meta" style="margin-top:2px">${esc(i.sub)}</div></div><input type="date" class="field plan-date" data-plan="${i.key}" value="${validIso(plan[i.key])?plan[i.key]:''}" min="${today}" aria-label="${L('Date pour','Date for')} ${esc(i.name)}" style="width:auto;margin:0;flex-shrink:0"></div></div>`).join('');
+}
+function renderFavoris(){
+  const seg = document.getElementById('fav-seg');
+  seg.setAttribute('data-v', favView);
+  seg.querySelector('[data-fv="list"]').textContent = L('Mes favoris','My favorites');
+  seg.querySelector('[data-fv="plan"]').textContent = L('Mon voyage','My trip');
+  seg.querySelectorAll('[data-fv]').forEach(b => { const on = b.getAttribute('data-fv')===favView; b.classList.toggle('active', on); b.setAttribute('aria-selected', on); });
+  document.getElementById('favoris-list').innerHTML = favView==='list' ? favListHtml() : favPlanHtml();
+  renderRemindBanner();
+}
+function switchFavView(v){
+  if(v===favView || favBusy) return;
+  const dir = v==='plan' ? 1 : -1, box = document.getElementById('favoris-list');
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  favView = v;
+  const seg = document.getElementById('fav-seg'); seg.setAttribute('data-v', v);
+  seg.querySelectorAll('[data-fv]').forEach(b => { const on = b.getAttribute('data-fv')===v; b.classList.toggle('active', on); b.setAttribute('aria-selected', on); });
+  if(reduce || !box.animate){ renderFavoris(); return; }
+  favBusy = true;
+  box.animate([{ opacity:1, transform:'translateX(0)' }, { opacity:0, transform:`translateX(${-dir*22}px)` }], { duration:140, easing:'ease-in', fill:'forwards' }).finished
+    .then(() => { renderFavoris(); return box.animate([{ opacity:0, transform:`translateX(${dir*22}px)` }, { opacity:1, transform:'translateX(0)' }], { duration:240, easing:'cubic-bezier(.2,.8,.2,1)' }).finished; })
+    .catch(() => {})
+    .finally(() => { favBusy = false; box.getAnimations().forEach(a => a.cancel()); });
+}
+document.getElementById('fav-seg').addEventListener('click', e => { const b = e.target.closest('[data-fv]'); if(!b) return; switchFavView(b.getAttribute('data-fv')); });
+document.getElementById('favoris-list').addEventListener('change', e => {
+  const k = e.target.getAttribute && e.target.getAttribute('data-plan'); if(!k) return;
+  const plan = loadPlan(); if(validIso(e.target.value)) plan[k] = e.target.value; else delete plan[k];
+  savePlan(plan); renderFavoris();
+});
+
+// ---- Rappel la veille (dans l'appli) ----
+function dueReminders(){
+  const plan = loadPlan(), today = isoLocal(new Date()), tomorrow = addDays(today,1);
+  return favItems().filter(i => plan[i.key]===tomorrow || plan[i.key]===today).map(i => ({ name:i.name, when: plan[i.key]===today ? 'today' : 'tomorrow' }));
+}
+function renderRemindBanner(){
+  const el = document.getElementById('remind-banner'); if(!el) return;
+  const due = dueReminders(), sig = isoLocal(new Date()) + '|' + due.map(d => d.when+d.name).join(',');
+  let seen = ''; try { seen = store.getItem('manava_remind_seen_v1') || ''; } catch(e){}
+  if(!due.length || seen===sig){ el.hidden = true; el.innerHTML = ''; return; }
+  el.hidden = false; el.setAttribute('data-sig', sig);
+  el.innerHTML = `<div class="remind" role="status"><div class="remind-ic">🔔</div><div class="remind-b"><b>${L('Rappel de votre voyage','Trip reminder')}</b>${due.map(d => `<div>${d.when==='today' ? L("Aujourd'hui","Today") : L('Demain','Tomorrow')} · ${esc(d.name)}</div>`).join('')}</div><div class="remind-act"><button class="btn-mini" data-act="remind-go">${L('Voir','View')}</button><button class="btn-ghost" data-act="remind-ok">OK</button></div></div>`;
+}
+
+// ---- Export calendrier (.ics dans un .zip : le viewer n'autorise pas l'extension .ics) ----
+function icsEscape(x){ return String(x).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n'); }
+function icsFold(line){
+  const enc = new TextEncoder(); let out = '', cur = '', bytes = 0;
+  for(const ch of line){ const n = enc.encode(ch).length; if(bytes+n > 75){ out += cur + '\r\n '; cur = ch; bytes = n+1; } else { cur += ch; bytes += n; } }
+  return out + cur;
+}
+function buildIcs(){
+  const plan = loadPlan(), stamp = new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+  const events = favItems().filter(i => validIso(plan[i.key])).map(i => {
+    const d = plan[i.key], ds = d.replace(/-/g,''), de = addDays(d,1).replace(/-/g,'');
+    return ['BEGIN:VEVENT','UID:'+i.key.replace(/[^a-z0-9]/gi,'-')+'-'+ds+'@manava.demo','DTSTAMP:'+stamp,'DTSTART;VALUE=DATE:'+ds,'DTEND;VALUE=DATE:'+de,
+      'SUMMARY:'+icsEscape(i.name),'DESCRIPTION:'+icsEscape(i.sub+' — Manava (prototype)'),
+      'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+icsEscape(L('Demain : ','Tomorrow: ')+i.name),'TRIGGER:-PT15H','END:VALARM','END:VEVENT'];
+  });
+  if(!events.length) return '';
+  const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Manava//Prototype//FR','CALSCALE:GREGORIAN', ...events.flat(), 'END:VCALENDAR'];
+  return lines.map(icsFold).join('\r\n') + '\r\n';
+}
+function crc32(bytes){ let crc = 0xFFFFFFFF; for(let i=0;i<bytes.length;i++){ crc ^= bytes[i]; for(let k=0;k<8;k++) crc = (crc>>>1) ^ (0xEDB88320 & -(crc&1)); } return (crc ^ 0xFFFFFFFF) >>> 0; }
+function makeZip(name, data){
+  const nb = new TextEncoder().encode(name), crc = crc32(data), now = new Date();
+  const time = (now.getHours()<<11) | (now.getMinutes()<<5) | (now.getSeconds()>>1), date = ((now.getFullYear()-1980)<<9) | ((now.getMonth()+1)<<5) | now.getDate();
+  const lh = new Uint8Array(30 + nb.length), lv = new DataView(lh.buffer);
+  lv.setUint32(0,0x04034b50,true); lv.setUint16(4,20,true); lv.setUint16(6,0x0800,true); lv.setUint16(8,0,true); lv.setUint16(10,time,true); lv.setUint16(12,date,true);
+  lv.setUint32(14,crc,true); lv.setUint32(18,data.length,true); lv.setUint32(22,data.length,true); lv.setUint16(26,nb.length,true); lv.setUint16(28,0,true); lh.set(nb,30);
+  const ch = new Uint8Array(46 + nb.length), cv = new DataView(ch.buffer);
+  cv.setUint32(0,0x02014b50,true); cv.setUint16(4,20,true); cv.setUint16(6,20,true); cv.setUint16(8,0x0800,true); cv.setUint16(10,0,true); cv.setUint16(12,time,true); cv.setUint16(14,date,true);
+  cv.setUint32(16,crc,true); cv.setUint32(20,data.length,true); cv.setUint32(24,data.length,true); cv.setUint16(28,nb.length,true); cv.setUint32(42,0,true); ch.set(nb,46);
+  const cdOff = lh.length + data.length, eo = new Uint8Array(22), ev = new DataView(eo.buffer);
+  ev.setUint32(0,0x06054b50,true); ev.setUint16(8,1,true); ev.setUint16(10,1,true); ev.setUint32(12,ch.length,true); ev.setUint32(16,cdOff,true);
+  const out = new Uint8Array(cdOff + ch.length + eo.length); out.set(lh,0); out.set(data,lh.length); out.set(ch,cdOff); out.set(eo,cdOff+ch.length);
+  return out;
+}
+async function exportIcs(){
+  const msg = document.getElementById('ics-msg'), say = x => { if(msg) msg.textContent = x; };
+  const ics = buildIcs(); if(!ics){ say(L("Donnez d'abord une date à au moins un favori.","First give at least one favorite a date.")); return; }
+  if(!dlCap){ say(L("L'enregistrement de fichier n'est pas disponible ici.","Saving files isn't available here.")); return; }
+  try {
+    await dlCap.save({ filename:'manava-voyage-calendrier.zip', data: makeZip('manava-voyage.ics', new TextEncoder().encode(ics)) });
+    say(L("Fichier proposé. Ouvrez-le dans Fichiers, puis touchez « manava-voyage.ics » et choisissez « Ajouter tout » pour l'ajouter à Calendrier.","File offered. Open it in Files, then tap “manava-voyage.ics” and choose “Add all” to add it to Calendar."));
+  } catch(err){
+    say(err && err.code==='declined' ? L('Enregistrement annulé.','Save cancelled.') : L("Impossible d'enregistrer le fichier ici.","Couldn't save the file here."));
+  }
+}
+
+function renderReservations(){
+  const res = loadRes();
+  document.getElementById('reservations-list').innerHTML = res.length ? res.slice().reverse().map(r => {
+    const key = r.ref || String(r.date); const cancelled = r.status==='cancel_requested';
+    return `<div class="card"><div class="thumb" style="background:linear-gradient(150deg,#6FC7BE,#1C7A72);font-size:24px">${cancelled?'⏳':'✅'}</div>
+    <div class="card-body"><h3>${esc(r.label)}</h3><div class="card-meta">${new Date(r.date).toLocaleDateString(lang==='fr'?'fr-FR':'en-US')} · ${esc(r.bank)}</div>
+    ${r.when?`<div class="card-meta">${detailText({unit:r.unit,qty:r.qty,date:r.when,endDate:r.endWhen})}</div>`:''}
+    ${r.ref?`<div class="card-meta">${L('Réf.','Ref.')} ${r.ref}</div>`:''}
+    <div class="price-tag" style="margin-top:8px">${fmt(r.xpf)}</div>
+    <div class="card-bottom"><span class="res-badge">${cancelled?L('Annulation demandée','Cancellation requested'):L('Confirmée','Confirmed')}</span>
+    ${cancelled?'':`<button class="btn-ghost" style="padding:6px 10px;font-size:12px" data-cancel="${key}">${L('Annuler / contester','Cancel / dispute')}</button>`}</div></div></div>`;
+  }).join('') : `<div class="empty-note">${t('noReservations')}</div>`;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-cancel]'); if(!b) return;
+  const key = b.getAttribute('data-cancel');
+  const res = loadRes(); const r = res.find(v => (v.ref || String(v.date))===key);
+  if(r){ r.status = 'cancel_requested'; store.setItem('manava_reservations_v1', JSON.stringify(res)); renderReservations(); }
+});
+
+function renderHomeReco(){
+  document.getElementById('home-reco').innerHTML = activities.slice(0,3).map(activityCard).join('');
+  bindBookButtons();
+}
+
+let currentFilter = null;
+let searchQuery = '';
+const norm = x => String(x).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+function matchesSearch(text){ return !searchQuery || norm(text).includes(norm(searchQuery)); }
+function catKeyFor(label){ const f = categories.find(c => c.fr===label || c.en===label); return f ? f.fr : label; }
+const CAT_SEARCH_PH = {
+  "Plage & lagon": {fr:"Rechercher une plage…", en:"Search a beach…"},
+  "Randonnée": {fr:"Rechercher une randonnée…", en:"Search a hike…"},
+  "Nightlife": {fr:"Rechercher un lieu, bar, boîte de nuit…", en:"Search a venue, bar, club…"},
+  "Culture": {fr:"Rechercher un lieu…", en:"Search a place…"},
+  "Nautique": {fr:"Rechercher une activité…", en:"Search an activity…"},
+};
+function openCategory(catFr){
+  currentFilter = catFr; searchQuery = '';
+  document.getElementById('explore-search-input').value = '';
+  goTo('explore'); renderExplore();
+}
+
+function renderExplore(){
+  const list = document.getElementById('explore-list');
+  const key = currentFilter ? catKeyFor(currentFilter) : null;
+  document.getElementById('explore-search-input').placeholder = (CAT_SEARCH_PH[key] || {fr:'Rechercher…',en:'Search…'})[lang];
+  const items = [];
+  activities.forEach(a => { if(key && a.cat!==key) return; if(!matchesSearch(a.title[lang]+' '+a.meta[lang])) return; items.push(activityCard(a)); });
+  places.forEach(p => { if(key && p.cat!==key) return; if(!matchesSearch(p.name+' '+p.commune[lang])) return; items.push(placeCard(p)); });
+  let trailsHtml = '';
+  if(key==='Randonnée'){
+    const tiers = [['easy', lang==='fr'?'Randonnées faciles et familiales':'Easy, family-friendly hikes'],
+                   ['medium', lang==='fr'?'Randonnées de niveau moyen':'Medium-level hikes'],
+                   ['hard', lang==='fr'?'Randonnées difficiles et sportives':'Hard, athletic hikes']];
+    tiers.forEach(([tk,label]) => {
+      const m = trails.filter(tr => tr.tier===tk && matchesSearch(tr.name+' '+(tr.commune?tr.commune[lang]:'')));
+      if(m.length) trailsHtml += `<div class="section-title" style="margin:22px 0 10px"><h2 style="font-size:16px">${label}</h2></div>` + m.map(trailCard).join('');
+    });
+    if(trailsHtml) trailsHtml = `<div class="section-title" style="margin:22px 0 4px"><h2 style="font-size:17px">${lang==='fr'?'Randonnées sans guide':'Self-guided hikes'}</h2></div>` + trailsHtml;
+  }
+  const body = items.join('') + trailsHtml;
+  list.innerHTML = (key==='Randonnée' ? hikeSafety() : '') + (body || `<div class="empty-note">${lang==='fr'?'Aucun résultat pour le moment.':'No results yet.'}</div>`);
+  bindBookButtons(); bindPlaceButtons();
+}
+document.getElementById('explore-search-input').addEventListener('input', e => { searchQuery = e.target.value; renderExplore(); });
+
+let transportQuery = '';
+function renderTransport(){
+  const list = transportOptions.filter(o => !transportQuery || norm(o.title[lang]+' '+o.desc[lang]+' '+o.commune[lang]).includes(norm(transportQuery)));
+  document.getElementById('transport-list').innerHTML = list.length ? list.map(o => `
+    <div class="transport-card"><div class="transport-top">
+      <div class="t-icon" style="font-size:20px">${o.icon}</div><div><h3>${o.title[lang]}</h3><div class="card-meta" style="margin-top:2px">${o.commune[lang]}</div></div>
+      <div class="t-eta"><span class="n">${o.eta}</span><span class="u">${t('min')} · ${L('exemple','sample')}</span></div></div>
+      <div class="transport-desc">${o.desc[lang]}</div>
+      <div class="transport-bottom"><div class="price-tag">${o.approx?'≈ ':''}${fmt(o.price)}${o.perDay?' '+t('perDay'):(o.approx?'':' '+t('perPerson'))}</div>
+      <button class="btn-reserve" data-book-label="${o.title[lang]}" data-book-xpf="${o.price}" data-book-unit="${o.perDay?'perDay':(o.approx?'perRide':'perPerson')}">${t('reserve')}</button></div>
+    </div>`).join('') : `<div class="empty-note">${lang==='fr'?'Aucun résultat.':'No results.'}</div>`;
+  bindBookButtons();
+}
+
+let guideFilter = null;
+function guideCard(g){
+  return `<div class="guide-card"><div class="guide-top">
+      <div class="avatar" style="background:${g.grad}">${g.initials}</div>
+      <div style="min-width:0"><h3>${esc(g.name)}</h3><div class="guide-langs">${g.langs[lang]}</div></div>
+      <span class="demo-pill" style="margin-left:auto">${L('Exemple','Sample')}</span></div>
+      <p class="guide-bio">${g.bio[lang]}</p>
+      <div class="guide-tags">${g.tags[lang].map(x=>`<span>${x}</span>`).join('')}</div>
+      <div class="transport-bottom" style="margin-top:0;padding-top:12px">
+      <div class="price-tag">${fmt(g.price)} <span>${t('perDay')}</span></div>
+      <div style="display:flex;gap:8px;align-items:center"><button class="btn-mini" data-contact="guide:${g.id}">${t('contact')}</button><button class="btn-reserve" data-book-label="${esc(g.name)}" data-book-xpf="${g.price}" data-book-unit="perDay">${t('reserve')}</button></div></div>
+    </div>`;
+}
+function renderGuides(){
+  const chipsEl = document.getElementById('guides-chips');
+  chipsEl.innerHTML = GUIDE_CATS.map(c => `<button class="chip ${guideFilter===c.id?'active':''}" data-gf="${c.id}" aria-pressed="${guideFilter===c.id}">${c.icon} ${c[lang]}</button>`).join('');
+  chipsEl.querySelectorAll('[data-gf]').forEach(b => b.addEventListener('click', () => { const v = b.getAttribute('data-gf'); guideFilter = guideFilter===v ? null : v; renderGuides(); }));
+  const cats = guideFilter ? GUIDE_CATS.filter(c => c.id===guideFilter) : GUIDE_CATS;
+  document.getElementById('guides-list').innerHTML = cats.map(c => {
+    const gs = guides.filter(g => guideFilter ? (g.cat===c.id || (g.also||[]).includes(c.id)) : g.cat===c.id);
+    if(!gs.length) return '';
+    return `<section><div class="guide-sec-h"><span style="font-size:20px">${c.icon}</span><h2>${c[lang]}</h2><span class="count">${gs.length} ${gs.length>1?L('guides','guides'):L('guide','guide')}</span></div>${gs.map(guideCard).join('')}</section>`;
+  }).join('');
+  const act = chipsEl.querySelector('.active'); if(act && act.scrollIntoView) act.scrollIntoView({ inline:'center', block:'nearest' });
+  bindBookButtons();
+}
+document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', () => goTo(b.getAttribute('data-back'))));
+document.getElementById('hebergement-search-input').addEventListener('input', e => { lodgQuery = e.target.value; renderLodging(); });
+document.getElementById('transport-search-input').addEventListener('input', e => { transportQuery = e.target.value; renderTransport(); });
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-book-label]'); if(!b) return;
+  openSheet(b.getAttribute('data-book-label'), parseFloat(b.getAttribute('data-book-xpf')), b.getAttribute('data-book-unit') || 'perRide', { minN: parseInt(b.getAttribute('data-book-min')||'0',10), maxN: parseInt(b.getAttribute('data-book-max')||'0',10) });
+});
+function bindBookButtons(){}
+function bindPlaceButtons(){ document.querySelectorAll('[data-place]').forEach(btn => btn.addEventListener('click', () => openPlaceSheet(btn.getAttribute('data-place')))); }
+
+// Logos officiels : à fournir par les marques (voir kits de marque). Mettre une image (data: URI) dans PAYLOGOS[id] pour l'afficher à la place du badge.
+const PAYLOGOS = {};
+const METHODS = [
+  { id:'visa', name:'Visa', init:'VISA', color:'#1C3B6E' },
+  { id:'mastercard', name:'Mastercard', init:'MC', color:'#8E4585' },
+  { id:'amex', name:'American Express', init:'AMEX', color:'#2E6DA4' },
+  { id:'paypal', name:'PayPal', init:'PP', color:'#14201E' },
+];
+const esc = x => String(x).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function hashPw(x){
+  try { const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('manava|'+x)); return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join(''); }
+  catch(e){ return x; }
+}
+let currentBooking = null, payStep = 'confirm', selectedBank = null, lastRef = '';
+function isoLocal(d){ return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10); }
+function addDays(iso,n){ const d = new Date(iso+'T12:00:00'); d.setDate(d.getDate()+n); return isoLocal(d); }
+const UNIT_WORD = { perPerson:{fr:'participant(s)',en:'participant(s)'}, perNight:{fr:'nuit(s)',en:'night(s)'}, perDay:{fr:'jour(s)',en:'day(s)'}, perRide:{fr:'trajet',en:'ride'} };
+function fmtDay(iso){ return new Date(iso+'T12:00:00').toLocaleDateString(lang==='fr'?'fr-FR':'en-US', { day:'numeric', month:'short', year:'numeric' }); }
+function detailText(b){
+  if(!b || !b.date) return '';
+  if(b.unit==='perNight') return `${fmtDay(b.date)} → ${fmtDay(b.endDate)} (${b.qty} ${UNIT_WORD.perNight[lang]})`;
+  if(b.unit==='perPerson' || b.unit==='perDay') return `${fmtDay(b.date)} · ${b.qty} ${UNIT_WORD[b.unit][lang]}`;
+  return fmtDay(b.date);
+}
+function openSheet(label, unitXpf, unit, extra){
+  extra = extra || {};
+  document.getElementById('lodging-sheet-backdrop').classList.remove('open');
+  const start = addDays(isoLocal(new Date()), 1);
+  const minN = unit==='perNight' ? Math.max(1, extra.minN||1) : 0, maxN = unit==='perNight' ? Math.max(minN, extra.maxN||60) : 0;
+  const qty0 = unit==='perNight' ? Math.min(maxN, Math.max(2, minN)) : 1;
+  currentBooking = { label, unit, unitXpf, qty:qty0, date:start, endDate:addDays(start,qty0), xpf:unitXpf, minN, maxN };
+  payStep = 'confirm'; selectedBank = null;
+  document.getElementById('sheet-title').textContent = label;
+  renderOptions(); renderPayStep();
+  document.getElementById('sheet-backdrop').classList.add('open');
+}
+function renderOptions(){
+  const b = currentBooking, today = isoLocal(new Date()); let h = '';
+  if(b.unit==='perNight'){
+    h = `<div class="opt-row"><div><label class="opt-lbl" for="opt-date">${L('Arrivée','Check-in')}</label><input type="date" class="field" id="opt-date" min="${today}" value="${b.date}" style="margin:2px 0 8px"></div><div><label class="opt-lbl" for="opt-end">${L('Départ','Check-out')}</label><input type="date" class="field" id="opt-end" min="${addDays(b.date,b.minN||1)}" max="${addDays(b.date,b.maxN||60)}" value="${b.endDate}" style="margin:2px 0 8px"></div></div>`;
+  } else {
+    h = `<label class="opt-lbl" for="opt-date">${b.unit==='perDay'?L('Date de début','Start date'):L('Date','Date')}</label><input type="date" class="field" id="opt-date" min="${today}" value="${b.date}" style="margin:2px 0 8px">`;
+    if(b.unit==='perPerson' || b.unit==='perDay') h += `<label class="opt-lbl">${b.unit==='perPerson'?L('Participants','Participants'):L('Nombre de jours','Number of days')}</label><div class="stepper"><button type="button" data-step="-1" aria-label="-">−</button><span id="opt-qty">${b.qty}</span><button type="button" data-step="1" aria-label="+">+</button></div>`;
+  }
+  document.getElementById('sheet-options').innerHTML = h;
+}
+function updateBreakdown(){
+  const b = currentBooking;
+  if(b.unit==='perNight'){ b.qty = (b.date && b.endDate) ? Math.max(0, Math.round((new Date(b.endDate+'T12:00:00') - new Date(b.date+'T12:00:00'))/86400000)) : 0; }
+  if(b.unit==='perRide') b.qty = 1;
+  b.xpf = b.unitXpf * b.qty;
+  document.getElementById('sheet-breakdown').innerHTML = `<div class="kv"><span>${fmt(b.unitXpf)} × ${b.qty} ${UNIT_WORD[b.unit][lang]}</span><span>${fmt(b.xpf)}</span></div><div class="kv"><span>${L('Frais de service','Service fee')}</span><span>${L('Aucun','None')}</span></div><div class="total-row"><span>${L('Total TTC','Total incl. tax')}</span><span>${fmt(b.xpf)}</span></div>`;
+  if(b.unit==='perNight'){
+    const bad = b.qty < b.minN || b.qty > b.maxN;
+    document.getElementById('sheet-breakdown').insertAdjacentHTML('beforeend', `<div class="stay-rule ${bad?'bad':''}">${L("Durée de séjour acceptée par l'hôte","Stay length accepted by the host")} : ${b.minN} – ${b.maxN} ${L('nuits','nights')}${bad ? ' · ' + L('durée hors limites','length out of range') : ''}</div>`);
+  }
+  document.getElementById('sheet-fx-note').textContent = currency==='XPF'
+    ? L('Montant débité en francs pacifiques (XPF).','Amount charged in Pacific francs (XPF).')
+    : L(`Montant débité : ${xpfStr(b.xpf)}. La conversion affichée est indicative (taux non temps réel).`, `Amount charged: ${xpfStr(b.xpf)}. The converted amount shown is indicative (not a live rate).`);
+}
+document.getElementById('sheet-options').addEventListener('click', e => {
+  const st = e.target.closest('[data-step]'); if(!st) return;
+  const b = currentBooking; b.qty = Math.min(b.unit==='perDay'?14:12, Math.max(1, b.qty + parseInt(st.getAttribute('data-step'),10)));
+  document.getElementById('opt-qty').textContent = b.qty; updateBreakdown();
+});
+document.getElementById('sheet-options').addEventListener('input', e => {
+  const b = currentBooking;
+  if(e.target.id==='opt-date'){
+    b.date = e.target.value;
+    if(b.unit==='perNight' && b.date){ const endEl = document.getElementById('opt-end'), mn = addDays(b.date,b.minN||1), mx = addDays(b.date,b.maxN||60); endEl.min = mn; endEl.max = mx; if(!b.endDate || b.endDate < mn){ b.endDate = mn; endEl.value = mn; } else if(b.endDate > mx){ b.endDate = mx; endEl.value = mx; } }
+  }
+  if(e.target.id==='opt-end') b.endDate = e.target.value;
+  updateBreakdown();
+});
+function closeSheet(){ document.getElementById('sheet-backdrop').classList.remove('open'); }
+function xpfStr(x){ return Math.round(x).toLocaleString('fr-FR')+' XPF'; }
+function loadRes(){ try { return JSON.parse(store.getItem('manava_reservations_v1')||'[]'); } catch(e){ return []; } }
+function renderBankList(){
+  document.getElementById('bank-list').innerHTML = METHODS.map(b => `<button class="bank-row ${selectedBank===b.id?'active':''}" data-bank="${b.id}">${PAYLOGOS[b.id] ? `<img class="bank-logo" src="${PAYLOGOS[b.id]}" alt="">` : `<span class="bank-badge" style="background:${b.color}">${b.init}</span>`}<span>${b.name}</span></button>`).join('');
+  document.querySelectorAll('[data-bank]').forEach(r => r.addEventListener('click', () => { selectedBank = r.getAttribute('data-bank'); renderPayStep(); }));
+}
+function renderPayStep(){
+  ['pay-confirm','pay-auth','pay-method','pay-review','pay-failed','pay-dup','pay-done'].forEach(id => document.getElementById(id).style.display='none');
+  const btn = document.getElementById('sheet-next'); btn.style.display = 'block'; btn.disabled = false; btn.classList.remove('pay');
+  document.getElementById('pay-msg').textContent = '';
+  const x = currentBooking ? currentBooking.xpf : 0;
+  if(payStep==='confirm'){
+    document.getElementById('pay-confirm').style.display='block';
+    updateBreakdown();
+    btn.textContent = L('Continuer','Continue');
+  } else if(payStep==='auth'){
+    document.getElementById('pay-auth').style.display='block'; btn.textContent = L('Continuer','Continue');
+    document.getElementById('pay-apple').textContent = L('Continuer avec Apple','Continue with Apple');
+    document.getElementById('pay-or').textContent = L('ou avec votre e-mail','or with your e-mail');
+    document.getElementById('pay-email-lbl').textContent = L('E-mail','E-mail');
+    document.getElementById('pay-pass-lbl').textContent = L('Mot de passe','Password');
+    document.getElementById('pay-apple-note').textContent = L("Démonstration : la connexion Apple est simulée, aucun vrai compte Apple n'est utilisé.","Demo: Apple sign-in is simulated, no real Apple account is used.");
+  } else if(payStep==='method'){
+    document.getElementById('pay-method').style.display='block'; renderBankList();
+    document.getElementById('pay-secure-note').textContent = L("Vous saisirez vos coordonnées auprès du prestataire de paiement sécurisé : Manava ne conserve jamais votre numéro de carte (version commerciale). Aucune donnée bancaire n'est saisie dans cette démonstration.", "You will enter your details with the secure payment provider: Manava never stores your card number (commercial version). No bank details are entered in this demo.");
+    btn.textContent = L('Continuer','Continue');
+  } else if(payStep==='review'){
+    const m = METHODS.find(v => v.id===selectedBank);
+    document.getElementById('pay-review').style.display='block';
+    document.getElementById('review-title').textContent = L('Récapitulatif avant paiement','Summary before payment');
+    document.getElementById('review-body').innerHTML = `<div class="kv"><span>${L('Réservation','Booking')}</span><span>${esc(currentBooking.label)}</span></div><div class="kv"><span>${L('Détails','Details')}</span><span>${detailText(currentBooking)}</span></div><div class="kv"><span>${L('Moyen de paiement','Payment method')}</span><span>${m?m.name:''}</span></div><div class="total-row"><span>${L('Total TTC','Total incl. tax')}</span><span>${fmt(x)}</span></div>` +
+      `<p style="font-size:12px;opacity:.65;line-height:1.5;margin:12px 0 0">${L("Annulation et remboursement : voir les CGV (remboursement sur le moyen de paiement utilisé). Rétractation : elle ne s'applique généralement pas aux activités de loisirs, hébergements, locations et transports à date déterminée. Aucune réservation n'est confirmée sans paiement validé.", "Cancellation and refunds: see the terms of sale (refund to the payment method used). Withdrawal: it generally does not apply to leisure activities, stays, rentals and transport on a set date. No booking is confirmed without a validated payment.")}</p>`;
+    document.getElementById('cgv-label').textContent = L("J'ai lu et j'accepte les conditions générales de vente.", "I have read and accept the terms of sale.");
+    document.getElementById('review-cgv-link').textContent = L('Lire les CGV','Read the terms of sale');
+    document.getElementById('pay-sim-fail').textContent = L('Simuler un paiement refusé (démo)','Simulate a declined payment (demo)');
+    btn.textContent = L(`Confirmer et payer ${fmt(x)}`, `Confirm and pay ${fmt(x)}`); btn.classList.add('pay');
+  } else if(payStep==='failed'){
+    const el = document.getElementById('pay-failed'); el.style.display='block';
+    el.innerHTML = `<div style="font-size:38px;margin-bottom:8px">❌</div><h3>${L('Paiement refusé','Payment declined')}</h3><p>${L("Votre paiement n'a pas abouti : aucune réservation n'a été enregistrée et vous n'avez pas été débité. Essayez un autre moyen de paiement.","Your payment did not go through: no booking was recorded and you were not charged. Try another payment method.")}</p>`;
+    btn.textContent = L('Choisir un autre moyen de paiement','Choose another payment method');
+  } else if(payStep==='dup'){
+    const el = document.getElementById('pay-dup'); el.style.display='block';
+    el.innerHTML = `<div style="font-size:38px;margin-bottom:8px">⚠️</div><h3>${L('Réservation identique détectée','Identical booking detected')}</h3><p>${L("Une réservation identique vient d'être enregistrée. Pour éviter un double paiement, vérifiez « Réservations » avant de continuer.","An identical booking was just recorded. To avoid paying twice, check “Bookings” before continuing.")}</p>`;
+    btn.textContent = L('Réserver quand même','Book anyway');
+  } else if(payStep==='done'){
+    const el = document.getElementById('pay-done'); el.style.display='block';
+    el.innerHTML = `<div style="font-size:40px;margin-bottom:10px">✅</div><h3>${L('Réservation confirmée','Booking confirmed')}</h3><p>${L('Référence','Reference')} ${lastRef} · ${fmt(x)}<br>${L("Un reçu est conservé dans l'onglet Réservations.","A receipt is kept in the Bookings tab.")}</p>`;
+    btn.textContent = L('Voir mes réservations','View my bookings');
+  }
+}
+function isDuplicate(){ return loadRes().some(r => r.label===currentBooking.label && r.xpf===currentBooking.xpf && (r.when||'')===currentBooking.date && r.status!=='cancel_requested' && Date.now()-r.date < 10*60*1000); }
+function finalizeBooking(){
+  const m = METHODS.find(v => v.id===selectedBank);
+  const res = loadRes();
+  lastRef = 'MNV-'+Date.now().toString(36).toUpperCase();
+  res.push({ ref:lastRef, label:currentBooking.label, xpf:currentBooking.xpf, bank:m.name, date:Date.now(), status:'confirmed', unit:currentBooking.unit, qty:currentBooking.qty, when:currentBooking.date, endWhen:currentBooking.endDate });
+  store.setItem('manava_reservations_v1', JSON.stringify(res));
+  renderReservations(); renderProfile(); renderPrivacy();
+  payStep = 'done';
+}
+document.getElementById('pay-apple').addEventListener('click', () => {
+  const email = 'compte-apple@demo.manava';
+  const accounts = loadAccounts();
+  if(!accounts.find(a => a.email===email)){ accounts.push({ email, pass:'', provider:'apple' }); saveAccounts(accounts); store.setItem('manava_user_count_v1', String(parseInt(store.getItem('manava_user_count_v1')||'0',10)+1)); }
+  store.setItem('manava_session_v1', email);
+  renderProfile(); renderPrivacy();
+  payStep = 'method'; renderPayStep();
+});
+document.getElementById('cgv-check').addEventListener('change', () => { if(payStep==='review') renderPayStep(); });
+document.getElementById('pay-sim-fail').addEventListener('click', () => { payStep = 'failed'; renderPayStep(); });
+document.getElementById('review-cgv-link').addEventListener('click', () => openLegal('doc-cgv'));
+document.getElementById('sheet-next').addEventListener('click', async () => {
+  if(payStep==='confirm'){
+    const b = currentBooking, msgEl = document.getElementById('pay-msg');
+    if(!b.date || b.date < isoLocal(new Date())){ msgEl.textContent = L("Choisissez une date valide (aujourd'hui ou plus tard).","Choose a valid date (today or later)."); return; }
+    if(b.unit==='perNight' && (!b.endDate || b.endDate <= b.date)){ msgEl.textContent = L("La date de départ doit être après la date d'arrivée.","Check-out must be after check-in."); return; }
+    if(b.unit==='perNight' && b.qty < b.minN){ msgEl.textContent = L(`Séjour minimum : ${b.minN} nuit(s) pour ce logement.`,`Minimum stay: ${b.minN} night(s) for this stay.`); return; }
+    if(b.unit==='perNight' && b.qty > b.maxN){ msgEl.textContent = L(`Séjour maximum : ${b.maxN} nuits pour ce logement.`,`Maximum stay: ${b.maxN} nights for this stay.`); return; }
+    payStep = store.getItem('manava_session_v1') ? 'method' : 'auth';
+  } else if(payStep==='auth'){
+    const email = document.getElementById('pay-email').value.trim().toLowerCase();
+    const pass = document.getElementById('pay-pass').value;
+    const errEl = document.getElementById('pay-error');
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || pass.length < 4){ errEl.textContent = L('Merci de saisir un e-mail valide et un mot de passe (4 caractères minimum).','Please enter a valid e-mail and a password (at least 4 characters).'); return; }
+    const hashed = await hashPw(pass);
+    const accounts = loadAccounts();
+    const existing = accounts.find(a => a.email===email);
+    if(existing){
+      if(existing.pass!==hashed && existing.pass!==pass){ errEl.textContent = L('Mot de passe incorrect.','Incorrect password.'); return; }
+      if(existing.pass===pass){ existing.pass = hashed; saveAccounts(accounts); }
+    } else { accounts.push({ email, pass:hashed }); saveAccounts(accounts); store.setItem('manava_user_count_v1', String(parseInt(store.getItem('manava_user_count_v1')||'0',10)+1)); }
+    store.setItem('manava_session_v1', email); errEl.textContent = '';
+    renderProfile(); renderPrivacy();
+    payStep = 'method';
+  } else if(payStep==='method'){
+    if(!selectedBank){ document.getElementById('pay-msg').textContent = L('Choisissez un moyen de paiement pour continuer.','Choose a payment method to continue.'); return; }
+    document.getElementById('cgv-check').checked = false;
+    payStep = 'review';
+  } else if(payStep==='review'){
+    if(!document.getElementById('cgv-check').checked){ document.getElementById('pay-msg').textContent = L('Cochez la case pour accepter les CGV et confirmer votre réservation.','Tick the box to accept the terms of sale and confirm your booking.'); return; }
+    if(isDuplicate()) payStep = 'dup'; else finalizeBooking();
+  } else if(payStep==='dup'){
+    finalizeBooking();
+  } else if(payStep==='failed'){
+    payStep = 'method';
+  } else if(payStep==='done'){
+    closeSheet(); goTo('reservations'); return;
+  }
+  renderPayStep();
+});
+
+// ---- Distance / mini-map ----
+let userPos = null;
+const DEFAULT_POS = { lat:-17.5334, lng:-149.5697 };
+function loadConsent(){ try { return Object.assign({ geo:false, marketing:false, date:null }, JSON.parse(store.getItem('manava_consent_v1')||'{}')); } catch(e){ return { geo:false, marketing:false, date:null }; } }
+function saveConsent(c){ c.date = Date.now(); store.setItem('manava_consent_v1', JSON.stringify(c)); }
+function requestGeo(cb){
+  if(!('geolocation' in navigator)){ userPos = null; if(cb) cb(false); return; }
+  navigator.geolocation.getCurrentPosition(p => { userPos = { lat:p.coords.latitude, lng:p.coords.longitude }; if(cb) cb(true); }, () => { userPos = null; if(cb) cb(false); }, { timeout:6000 });
+}
+if(loadConsent().geo) requestGeo();
+function haversineKm(lat1,lng1,lat2,lng2){
+  const R=6371, toRad=d=>d*Math.PI/180;
+  const dLat=toRad(lat2-lat1), dLng=toRad(lng2-lng1);
+  const a=Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+function estimateTime(km, mode){
+  const speeds = { walk:4.5, bus:22, car:38 };
+  const factor = { walk:1.35, bus:1.25, car:1.2 }[mode];
+  const mins = Math.round((km*factor)/speeds[mode]*60);
+  return mins<60 ? mins+' '+t('min') : Math.floor(mins/60)+'h'+String(mins%60).padStart(2,'0');
+}
+const TBBOX = { minLat:-17.87, maxLat:-17.49, minLng:-149.62, maxLng:-149.14 };
+function projectPt(lat,lng){ const x=(lng-TBBOX.minLng)/(TBBOX.maxLng-TBBOX.minLng); const y=(TBBOX.maxLat-lat)/(TBBOX.maxLat-TBBOX.minLat); return { x:20+x*160, y:20+y*160 }; }
+function renderMiniMap(place, pos){
+  const you = projectPt(pos.lat,pos.lng), dest = projectPt(place.lat,place.lng);
+  return `<svg viewBox="0 0 200 200" class="mini-map">
+    <ellipse cx="100" cy="100" rx="92" ry="88" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+    <line x1="${you.x}" y1="${you.y}" x2="${dest.x}" y2="${dest.y}" stroke="var(--coral)" stroke-width="2" stroke-dasharray="4 4"/>
+    <circle cx="${you.x}" cy="${you.y}" r="5" fill="var(--lagoon-deep)"/>
+    <circle cx="${dest.x}" cy="${dest.y}" r="5" fill="var(--coral)"/>
+    <text x="${you.x}" y="${you.y-10}" font-size="9" text-anchor="middle" fill="var(--ink)" font-family="'Space Grotesk',sans-serif">${lang==='fr'?'Vous':'You'}</text>
+    <text x="${dest.x}" y="${dest.y-10}" font-size="9" text-anchor="middle" fill="var(--ink)" font-family="'Space Grotesk',sans-serif">${place.name}</text>
+  </svg>`;
+}
+let activePlace = null;
+let currentTransportMode = 'car';
+function openPlaceSheet(id){
+  const p = places.find(x => x.id===id); if(!p) return;
+  activePlace = p;
+  const hero = document.getElementById('ps-hero');
+  hero.style.background = p.grad;
+  hero.innerHTML = (p.photos && p.photos.length) ? galleryHtml(p.photos.map(x => ({ src:x.src, credit:x.credit })), 120) : (p.cat==='Plage & lagon' && p.tags ? sceneSvg(p) : `<span style="font-size:30px">${p.icon}</span>`);
+  document.getElementById('ps-title').textContent = p.name;
+  document.getElementById('ps-commune').textContent = p.commune[lang];
+  document.getElementById('ps-tags').innerHTML = p.tags ? p.tags.map(x=>`<span>${x[lang]}</span>`).join('') : '';
+  document.getElementById('ps-desc').textContent = p.desc[lang];
+  currentTransportMode = 'car';
+  document.querySelectorAll('.ps-mode').forEach(b => b.classList.toggle('active', b.getAttribute('data-mode')==='car'));
+  updatePlaceDistance(p);
+  document.getElementById('place-sheet-backdrop').classList.add('open');
+}
+function updatePlaceDistance(p){
+  const pos = userPos || DEFAULT_POS;
+  const km = haversineKm(pos.lat,pos.lng,p.lat,p.lng);
+  document.getElementById('ps-map').innerHTML = renderMiniMap(p,pos);
+  document.getElementById('ps-distance').textContent = km.toFixed(1)+' km · '+estimateTime(km, currentTransportMode);
+  document.getElementById('ps-origin-note').textContent = userPos ? (lang==='fr'?'Depuis votre position':'From your location') : (lang==='fr'?'Depuis Papeete (estimation)':'From Papeete (estimate)');
+  const gb = document.getElementById('ps-geo-btn');
+  gb.style.display = userPos ? 'none' : 'inline-block';
+  gb.textContent = lang==='fr' ? '📍 Utiliser ma position (avec mon accord)' : '📍 Use my location (with my consent)';
+}
+document.querySelectorAll('.ps-mode').forEach(btn => btn.addEventListener('click', () => {
+  currentTransportMode = btn.getAttribute('data-mode');
+  document.querySelectorAll('.ps-mode').forEach(b => b.classList.toggle('active', b===btn));
+  if(activePlace) updatePlaceDistance(activePlace);
+}));
+document.getElementById('ps-close').addEventListener('click', () => document.getElementById('place-sheet-backdrop').classList.remove('open'));
+document.getElementById('place-sheet-backdrop').addEventListener('click', e => { if(e.target.id==='place-sheet-backdrop') e.currentTarget.classList.remove('open'); });
+
+// ---- Navigation ----
+function goTo(name){
+  const current = document.querySelector('.screen.active');
+  const next = document.getElementById('screen-'+name);
+  if(current === next) return;
+  if(current){ current.classList.remove('active'); }
+  next.classList.add('active','entering');
+  requestAnimationFrame(() => { next.classList.remove('entering'); next.classList.add('entered'); });
+  setTimeout(() => next.classList.remove('entered'), 260);
+  const tabFor = { home:'home', favoris:'favoris', menu:'menu', reservations:'reservations', explore:'menu', transport:'menu', guides:'menu', hebergement:'menu', partner:'menu', deals:'home' }[name] || name;
+  document.querySelectorAll('.tab').forEach(tb => tb.classList.toggle('active', tb.getAttribute('data-screen')===tabFor));
+  document.getElementById('topbar').classList.toggle('mini', name !== 'home');
+  document.getElementById('legal-footer').style.display = name==='legal' ? 'none' : 'block';
+  if(name==='favoris') renderFavoris();
+  if(name==='home') renderRemindBanner();
+  if(name==='deals') renderDealsScreen();
+  if(name==='reservations'){ renderReservations(); renderProfile(); }
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('.tab').forEach(tb => tb.addEventListener('click', () => goTo(tb.getAttribute('data-screen'))));
+
+// ---- Language ----
+function applyLang(){
+  document.querySelectorAll('[data-i]').forEach(el => { const k = el.getAttribute('data-i'); if(!dict[k]) return; if(el.tagName==='INPUT') el.placeholder = dict[k][lang]; else el.innerHTML = dict[k][lang]; });
+  document.querySelectorAll('[data-lang]').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-lang')===lang));
+  renderDeals(); renderDealsScreen(); renderHomeCats(); renderHomeReco(); renderRemindBanner();
+  renderExplore(); renderTransport(); renderGuides(); renderProfile();
+  renderMenu(); renderLodging(); renderFavoris(); renderReservations(); renderLegal(); renderPrivacy(); renderWeather(); renderPartner();
+  document.getElementById('currency-btn').textContent = currency+' ▾';
+  if(activePlace){ document.getElementById('ps-commune').textContent = activePlace.commune[lang]; document.getElementById('ps-tags').innerHTML = activePlace.tags ? activePlace.tags.map(x=>`<span>${x[lang]}</span>`).join('') : ''; document.getElementById('ps-desc').textContent = activePlace.desc[lang]; updatePlaceDistance(activePlace); }
+}
+document.querySelectorAll('[data-lang]').forEach(btn => btn.addEventListener('click', () => {
+  lang = btn.getAttribute('data-lang'); store.setItem('manava_lang_v1', lang); document.documentElement.lang = lang; applyLang();
+}));
+document.getElementById('sheet-close').addEventListener('click', closeSheet);
+document.getElementById('sheet-backdrop').addEventListener('click', e => { if(e.target.id==='sheet-backdrop') closeSheet(); });
+
+function renderProfile(){
+  const email = store.getItem('manava_session_v1') || '';
+  document.getElementById('profile-email').textContent = email || (lang==='fr'?'Voyageur':'Traveler');
+  document.getElementById('profile-avatar-letter').textContent = email ? email[0].toUpperCase() : '?';
+  const count = parseInt(store.getItem('manava_user_count_v1')||'0', 10);
+  document.getElementById('profile-count-note').textContent = lang==='fr'
+    ? `${count} compte(s) créé(s) sur cet appareil (démo locale, pas un chiffre global).`
+    : `${count} account(s) created on this device (local demo, not a global figure).`;
+  document.getElementById('admin-stats').style.display = store.getItem('manava_admin_v1')==='1' ? 'block' : 'none';
+}
+let brandTapCount = 0, brandTapTimer = null;
+document.getElementById('brand-tap').addEventListener('click', () => {
+  brandTapCount++;
+  clearTimeout(brandTapTimer);
+  brandTapTimer = setTimeout(() => { brandTapCount = 0; }, 1500);
+  if(brandTapCount >= 5){
+    brandTapCount = 0;
+    store.setItem('manava_admin_v1', store.getItem('manava_admin_v1')==='1' ? '0' : '1');
+    renderProfile();
+  }
+});
+document.getElementById('reset-demo').addEventListener('click', () => {
+  ['manava_onboarded_v1','manava_session_v1','manava_reservations_v1','manava_favs_v1','manava_accounts_v1','manava_user_count_v1','manava_consent_v1','manava_plan_v2','manava_messages_v1','manava_remind_seen_v1'].forEach(k => store.removeItem(k));
+  location.reload();
+});
+
+// ---- Visuels, météo, sécurité rando, partenaires ----
+function sceneSvg(p){
+  const t0 = (p.tags && p.tags[0] ? p.tags[0].fr : '').toLowerCase(), t1 = (p.tags && p.tags[1] ? p.tags[1].fr : '').toLowerCase();
+  const sand = p.sand==='light' ? '#F3E6C8' : p.sand==='neutral' ? '#C8B896' : t0.includes('blanc') ? '#F3E6C8' : t0.includes('galets') ? '#6B625A' : t0.includes('gris') ? '#4B5258' : '#262B30';
+  const calm = t1.includes('calme'), rough = t1.includes('vagues');
+  const s1 = calm ? '#7FD6CC' : '#3E8FA0', s2 = calm ? '#1FA39B' : '#1F5E73';
+  const wave = rough ? 'M0 46 Q8 38 16 46 T32 46 T48 46 T64 46 T76 46' : calm ? 'M0 47 Q19 44 38 47 T76 47' : 'M0 46 Q10 41 20 46 T40 46 T60 46 T76 46';
+  const id = 'sc'+String(p.id).replace(/[^a-z0-9]/gi,'');
+  return `<svg viewBox="0 0 76 76" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="${id}k" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9AD8F2"/><stop offset="1" stop-color="#F8E7C2"/></linearGradient><linearGradient id="${id}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${s1}"/><stop offset="1" stop-color="${s2}"/></linearGradient></defs><rect width="76" height="76" fill="url(#${id}k)"/><circle cx="58" cy="16" r="6.5" fill="#FFE9A8"/><rect y="40" width="76" height="22" fill="url(#${id}s)"/><path d="${wave}" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" opacity=".85"/>${rough?'<path d="M0 53 Q8 48 16 53 T32 53 T48 53 T64 53 T76 53" fill="none" stroke="#fff" stroke-width="1.6" opacity=".6"/>':''}<path d="M0 62 Q38 54 76 62 L76 76 L0 76Z" fill="${sand}"/></svg>`;
+}
+// Pour ajouter une vraie photo : ajouter  photo:"images/mon-image.jpg"  à n'importe quel élément (plage, activité, hébergement…).
+function thumbInner(it){
+  const ph = (it.photos && it.photos[0]) ? it.photos[0].src : it.photo;
+  if(ph) return `<img src="${ph}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${it.icon}'))">`;
+  if(it.cat==='Plage & lagon' && it.tags) return sceneSvg(it);
+  return it.icon;
+}
+function hikeSafety(){
+  return `<div class="safety"><h3>${L('Avant de partir','Before you go')}</h3><ul>
+    <li>${L("Le réseau mobile est limité en montagne : téléchargez la zone dans Google Maps (carte hors connexion) avant de partir.","Mobile coverage is limited in the mountains: download the area in Google Maps (offline map) before leaving.")}</li>
+    <li>${L("Emportez de l'eau, une protection contre le soleil et la pluie, et prévenez un proche de votre itinéraire.","Bring water, sun and rain protection, and tell someone your route.")}</li>
+    <li>${L("Vérifiez la météo et évitez les vallées par temps de pluie.","Check the weather and avoid valleys in rain.")}</li>
+    <li>${L("Urgences : 15 (SAMU), 17 (police/gendarmerie), 18 (pompiers).","Emergencies: 15 (medical), 17 (police/gendarmerie), 18 (fire).")}</li></ul></div>`;
+}
+let weather = 'sun';
+const WEATHER = {
+  sun:{ fr:'☀️ Beau temps', en:'☀️ Sunny', cats:['Plage & lagon','Nautique'], tiers:['easy','medium'] },
+  cloud:{ fr:'⛅ Nuageux', en:'⛅ Cloudy', cats:['Randonnée','Culture'], tiers:['easy'] },
+  rain:{ fr:'🌧️ Pluie', en:'🌧️ Rain', cats:['Culture','Nightlife'], tiers:[] },
+};
+function renderWeather(){
+  document.getElementById('weather-chips').innerHTML = Object.keys(WEATHER).map(k => `<button class="chip ${weather===k?'active':''}" data-w="${k}">${WEATHER[k][lang]}</button>`).join('');
+  document.getElementById('weather-note').textContent = L("Choisissez la météo du jour : suggestions indicatives (pas de prévision en direct).","Pick today's weather: indicative suggestions (no live forecast).");
+  const W = WEATHER[weather];
+  const cards = [...activities.filter(a => W.cats.includes(a.cat)).map(activityCard), ...places.filter(x => W.cats.includes(x.cat)).map(placeCard)].slice(0,4)
+    .concat(trails.filter(tr => W.tiers.includes(tr.tier)).slice(0,2).map(trailCard));
+  document.getElementById('weather-list').innerHTML = cards.join('');
+}
+document.getElementById('weather-chips').addEventListener('click', e => { const b = e.target.closest('[data-w]'); if(!b) return; weather = b.getAttribute('data-w'); renderWeather(); });
+document.querySelector('#screen-home .see-all').addEventListener('click', () => goTo('deals'));
+
+function renderPartner(){
+  const types = [...categories.map(c => c[lang]), L('Hébergement','Stay'), L('Transport','Transport'), L('Guide','Guide')];
+  document.getElementById('partner-body').innerHTML = `
+    <div class="panel"><h3>${L('Présentez votre offre aux visiteurs','Showcase your offer to visitors')}</h3>
+      <p style="margin:0">${L("Guides, hébergements, activités, transports : rejoignez Manava. Les conditions (frais d'entrée et abonnement) seront précisées avant toute inscription.","Guides, stays, activities, transport: join Manava. Terms (entry fee and subscription) will be specified before any registration.")}</p></div>
+    <div class="panel">
+      <label class="opt-lbl" for="pt-name">${L('Nom de votre activité','Business name')}</label><input class="field" id="pt-name" style="margin:2px 0 10px">
+      <label class="opt-lbl" for="pt-type">${L("Type d'offre","Offer type")}</label><select class="field" id="pt-type" style="margin:2px 0 10px">${types.map(x => `<option>${x}</option>`).join('')}</select>
+      <label class="opt-lbl" for="pt-commune">${L('Commune','Municipality')}</label><input class="field" id="pt-commune" style="margin:2px 0 10px">
+      <label class="opt-lbl" for="pt-email">E-mail</label><input class="field" id="pt-email" type="email" style="margin:2px 0 10px">
+      <label class="opt-lbl" for="pt-msg">${L('Message (facultatif)','Message (optional)')}</label><textarea class="field" id="pt-msg" style="margin:2px 0 10px"></textarea>
+      <div class="msg" id="pt-msg-out"></div>
+      <button class="btn-dark" data-act="partner-send">${L('Envoyer ma demande','Send my request')}</button>
+      <div class="sw-d" style="margin-top:10px">${L("Vos informations servent uniquement à traiter votre demande (voir Mentions légales).","Your information is only used to process your request (see Legal notice).")}</div>
+    </div>`;
+}
+document.getElementById('partner-body').addEventListener('click', e => {
+  if(!e.target.closest('[data-act="partner-send"]')) return;
+  const v = id => document.getElementById(id).value.trim(), out = document.getElementById('pt-msg-out');
+  if(!v('pt-name') || !v('pt-commune') || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('pt-email'))){ out.textContent = L("Merci de renseigner le nom, la commune et un e-mail valide.","Please enter the name, municipality and a valid e-mail."); return; }
+  let list = []; try { list = JSON.parse(store.getItem('manava_partners_v1')||'[]'); } catch(err){}
+  list.push({ name:v('pt-name'), type:v('pt-type'), commune:v('pt-commune'), email:v('pt-email'), message:v('pt-msg'), date:Date.now() });
+  store.setItem('manava_partners_v1', JSON.stringify(list));
+  out.textContent = L("✓ Demande enregistrée sur cet appareil (démonstration : elle n'est pas encore transmise). Dans la version commerciale, elle serait envoyée à l'équipe Manava.","✓ Request saved on this device (demo: not yet transmitted). In the commercial version it would be sent to the Manava team.");
+});
+
+// ---- Légal, confidentialité, consentement, droits RGPD ----
+const L = (fr,en) => lang==='fr' ? fr : en;
+const P = (fr,en) => ({ fr, en });
+const LEGAL = [
+  { id:'mentions', t:P('1. Mentions légales','1. Legal notice'), items:[
+    P("Éditeur de l'application : [nom ou raison sociale — à compléter].","Publisher of the app: [name or company name — to be completed]."),
+    P("Forme juridique et capital : [à compléter si applicable].","Legal form and capital: [to be completed if applicable]."),
+    P("Adresse professionnelle : [adresse complète — Tahiti, Polynésie française].","Business address: [full address — Tahiti, French Polynesia]."),
+    P("Immatriculation : [numéro d'immatriculation, par exemple numéro Tahiti — à compléter si applicable].","Registration: [registration number — to be completed if applicable]."),
+    P("Contact : [adresse e-mail] · [téléphone].","Contact: [e-mail address] · [phone]."),
+    P("Responsable de la publication : [nom].","Publication manager: [name]."),
+    P("Hébergeur : [nom, adresse et contact de l'hébergeur de la version commerciale — à compléter]. La version de démonstration est hébergée sur la plateforme claude.ai (Anthropic).","Host: [name, address and contact of the commercial version's host — to be completed]. The demo version is hosted on the claude.ai platform (Anthropic).")
+  ]},
+  { id:'privacy', t:P('2. Politique de confidentialité','2. Privacy policy'), items:[
+    P("Données collectées : adresse e-mail, mot de passe (stocké sous forme hachée), langue et devise choisies, favoris, réservations (intitulé, montant, date, moyen de paiement choisi, référence), dates de votre programme de voyage, messages aux prestataires et, uniquement avec votre accord, votre position pour estimer les distances. Les coordonnées bancaires ne sont jamais conservées par Manava : elles sont traitées par un prestataire de paiement certifié.","Data collected: e-mail address, password (stored hashed), chosen language and currency, favorites, bookings (title, amount, date, chosen payment method, reference), the dates of your trip itinerary, messages to providers and, only with your consent, your location to estimate distances. Bank details are never kept by Manava: they are handled by a certified payment provider."),
+    P("Finalités : créer et gérer votre compte, traiter et suivre vos réservations, établir les reçus, calculer des distances vers les lieux et, si vous y consentez, vous envoyer des offres.","Purposes: create and manage your account, process and track your bookings, issue receipts, calculate distances to places and, if you consent, send you offers."),
+    P("Destinataires : l'éditeur, les prestataires touristiques concernés par votre réservation (informations strictement nécessaires), le prestataire de paiement et l'hébergeur. Vos données ne sont pas vendues.","Recipients: the publisher, the tourism providers involved in your booking (strictly necessary information), the payment provider and the host. Your data is not sold."),
+    P("Durée de conservation : compte et favoris jusqu'à la suppression du compte ; données de réservation et de facturation pendant la durée légale applicable aux pièces comptables (généralement 10 ans, à confirmer) ; position : non conservée au-delà de la session ; offres par e-mail : jusqu'au retrait du consentement.","Retention: account and favorites until the account is deleted; booking and billing data for the legal period applying to accounting records (generally 10 years, to be confirmed); location: not kept beyond the session; e-mail offers: until consent is withdrawn."),
+    P("Sécurité : chiffrement des échanges (HTTPS) et des données sensibles, mots de passe protégés par hachage, contrôle des accès, mises à jour régulières et surveillance contre les intrusions. Ces mesures sont à mettre en œuvre côté serveur dans la version commerciale ; la démonstration conserve ses données uniquement sur votre appareil.","Security: encrypted exchanges (HTTPS) and sensitive data, hashed passwords, access control, regular updates and intrusion monitoring. These measures must be implemented server-side in the commercial version; the demo keeps its data on your device only."),
+    P("Vos droits : accès, rectification, effacement, limitation, opposition, portabilité et retrait du consentement. Exercez-les dans « Mes données personnelles » ci-dessous ou en écrivant à [e-mail de contact]. Vous pouvez aussi saisir l'autorité de protection des données compétente.","Your rights: access, rectification, erasure, restriction, objection, portability and withdrawal of consent. Exercise them in “My personal data” below or by writing to [contact e-mail]. You may also contact the competent data protection authority."),
+    P("Responsable du traitement : [éditeur — à compléter]. Délégué à la protection des données (DPO) : [nom et contact s'il est désigné ; sa désignation n'est obligatoire que dans certains cas].","Data controller: [publisher — to be completed]. Data protection officer (DPO): [name and contact if appointed; appointment is only mandatory in some cases].")
+  ]},
+  { id:'consent', t:P('3. Gestion du consentement','3. Consent management'), items:[
+    P("Chaque usage facultatif (localisation, offres par e-mail) repose sur votre accord libre, refusé par défaut. Vous pouvez l'accepter, le refuser ou le retirer à tout moment, aussi simplement que vous l'avez donné, dans « Consentements » ci-dessous.","Each optional use (location, e-mail offers) relies on your free consent, refused by default. You can accept, refuse or withdraw it at any time, as easily as you gave it, in “Consents” below."),
+    P("L'autorisation de localisation de votre téléphone ne remplace pas ce consentement : Manava vous le demande séparément. Refuser n'a aucune incidence sur vos réservations.","Your phone's location permission does not replace this consent: Manava asks for it separately. Refusing has no effect on your bookings.")
+  ]},
+  { id:'cgu', t:P("4. Conditions générales d'utilisation (CGU)",'4. Terms of use'), items:[
+    P("Objet : les présentes CGU encadrent l'usage de l'application Manava, qui présente des activités, hébergements, transports et guides en Polynésie française et permet de les réserver.","Purpose: these terms govern the use of the Manava app, which presents activities, stays, transport and guides in French Polynesia and lets you book them."),
+    P("Accès : la consultation est libre et gratuite, sans compte. Un compte est créé au moment de la première réservation.","Access: browsing is free and needs no account. An account is created at your first booking."),
+    P("Obligations de l'utilisateur : fournir des informations exactes, ne pas usurper l'identité d'autrui, ne pas détourner l'application (fraude, extraction automatisée, atteinte à la sécurité) et protéger ses identifiants.","User obligations: provide accurate information, not impersonate anyone, not misuse the app (fraud, automated scraping, security breaches) and protect your credentials."),
+    P("Informations affichées : prix, horaires, disponibilités, distances, durées estimées et taux de change sont indicatifs et peuvent évoluer ; seul le prix affiché avant la validation du paiement fait foi.","Information shown: prices, hours, availability, distances, estimated times and exchange rates are indicative and may change; only the price shown before payment validation applies."),
+    P("Activités de plein air : randonnées, baignades et sorties en mer comportent des risques. L'utilisateur reste responsable de sa préparation, de son équipement et du respect des consignes, interdictions et permis éventuels (par exemple le permis de la vallée de la Fautaua).","Outdoor activities: hikes, swimming and sea trips involve risks. Users remain responsible for their preparation, equipment and compliance with rules, bans and permits (for example the Fautaua valley permit)."),
+    P("Responsabilité : les prestations sont fournies par des prestataires indépendants, qui en demeurent responsables. L'éditeur répond du fonctionnement de l'application dans les limites prévues par la loi.","Liability: services are provided by independent providers, who remain responsible for them. The publisher is responsible for the app's operation within the limits set by law."),
+    P("Propriété intellectuelle : l'application, ses textes, visuels et marques sont protégés ; toute reproduction sans autorisation est interdite.","Intellectual property: the app, its texts, visuals and marks are protected; any reproduction without permission is prohibited."),
+    P("Suspension et fermeture de compte : l'éditeur peut suspendre ou fermer un compte en cas de non-respect des CGU ou de fraude, en informant l'utilisateur lorsque c'est possible. L'utilisateur peut supprimer son compte à tout moment depuis « Mes données personnelles ».","Suspension and closure: the publisher may suspend or close an account for breach of these terms or fraud, informing the user where possible. Users can delete their account at any time from “My personal data”."),
+    P("Modification et droit applicable : les CGU peuvent évoluer, l'utilisateur en étant informé. Droit applicable et juridiction compétente : [à compléter].","Changes and governing law: these terms may change and users will be informed. Governing law and competent court: [to be completed].")
+  ]},
+  { id:'cgv', t:P('5. Conditions générales de vente (CGV)','5. Terms of sale'), items:[
+    P("Prix : indiqués en francs pacifiques (XPF), toutes taxes comprises [taux de taxe à compléter]. Le montant total, frais éventuels inclus, est affiché avant la validation. Les conversions en EUR, USD, CAD ou CHF sont indicatives.","Prices: shown in Pacific francs (XPF), all taxes included [tax rate to be completed]. The total amount, including any fees, is shown before validation. Conversions to EUR, USD, CAD or CHF are indicative."),
+    P("Frais : [frais de service éventuels à compléter — aucun dans la version de démonstration].","Fees: [any service fees to be completed — none in the demo version]."),
+    P("Paiement : par carte Visa, Mastercard, American Express ou PayPal, débité à la confirmation explicite de la commande. Les coordonnées bancaires sont traitées par un prestataire de paiement certifié.","Payment: by Visa, Mastercard, American Express or PayPal card, charged on explicit confirmation of the order. Bank details are handled by a certified payment provider."),
+    P("Paiement refusé, doublons, contestations : en cas de refus, aucune réservation n'est confirmée et aucun débit n'est effectué ; vous pouvez choisir un autre moyen de paiement. Manava vous avertit si une réservation identique vient d'être enregistrée. Pour contester un paiement, contactez d'abord [e-mail de contact] ; vous pouvez aussi saisir votre banque ou PayPal.","Declined payments, duplicates, disputes: if a payment is declined, no booking is confirmed and nothing is charged; you can choose another payment method. Manava warns you if an identical booking was just recorded. To dispute a payment, first contact [contact e-mail]; you may also contact your bank or PayPal."),
+    P("Annulation : [conditions d'annulation à compléter, par exemple gratuite jusqu'à X heures avant la prestation]. Les conditions propres à un prestataire sont indiquées sur sa fiche. La demande se fait depuis « Réservations » ou par e-mail.","Cancellation: [cancellation terms to be completed, for example free up to X hours before the service]. A provider's own terms are shown on its page. Requests are made from “Bookings” or by e-mail."),
+    P("Remboursement : les sommes dues sont remboursées sur le moyen de paiement utilisé sous [délai à compléter].","Refunds: amounts due are refunded to the payment method used within [period to be completed]."),
+    P("Rétractation : sauf disposition contraire applicable, le droit de rétractation ne s'applique pas aux activités de loisirs, hébergements, locations et transports fournis à une date déterminée ; à confirmer selon le droit applicable en Polynésie française.","Withdrawal: unless otherwise provided by applicable law, the right of withdrawal does not apply to leisure activities, stays, rentals and transport provided on a set date; to be confirmed under the law applicable in French Polynesia."),
+    P("Réclamations : par e-mail à [adresse], réponse sous [délai]. Médiateur de la consommation : [à compléter].","Complaints: by e-mail to [address], reply within [period]. Consumer mediator: [to be completed]."),
+    P("Facturation et obligations comptables : un reçu portant une référence unique est conservé dans « Réservations » ; les pièces comptables sont archivées pendant la durée légale et les obligations fiscales de l'éditeur sont respectées [à compléter].","Invoicing and accounting: a receipt with a unique reference is kept in “Bookings”; accounting records are archived for the legal period and the publisher's tax obligations are met [to be completed].")
+  ]}
+];
+let screenBeforeLegal = 'home';
+function renderLegal(){
+  document.getElementById('legal-banner').textContent = L("Modèle de démonstration : ces textes, avec leurs champs [à compléter], doivent être complétés et validés par un professionnel du droit avant toute mise en ligne (droit applicable en Polynésie française à confirmer).","Demo template: these texts, including the [to be completed] fields, must be completed and reviewed by a legal professional before going live (law applicable in French Polynesia to be confirmed).");
+  document.getElementById('legal-docs').innerHTML = LEGAL.map(d => `<details class="legal-doc anchor" id="doc-${d.id}"><summary>${d.t[lang]}</summary><div class="doc-body">${d.items.map(i => `<p>${i[lang]}</p>`).join('')}</div></details>`).join('');
+}
+function renderPrivacy(){
+  const email = store.getItem('manava_session_v1') || '';
+  const c = loadConsent();
+  const dateTxt = c.date ? new Date(c.date).toLocaleDateString(lang==='fr'?'fr-FR':'en-US') : '—';
+  document.getElementById('privacy-space').innerHTML = `
+    <div class="panel anchor" id="mydata"><h3>${L('Mes données personnelles','My personal data')}</h3>
+      ${email ? `<div class="kv"><span>E-mail</span><span>${esc(email)}</span></div>` : `<p>${L("Aucun compte pour l'instant : il est créé lors de votre première réservation.","No account yet: it is created at your first booking.")}</p>`}
+      <div class="kv"><span>${L('Langue','Language')}</span><span>${lang.toUpperCase()}</span></div>
+      <div class="kv"><span>${L('Devise','Currency')}</span><span>${currency}</span></div>
+      <div class="kv"><span>${L('Favoris','Favorites')}</span><span>${loadFavs().length}</span></div>
+      <div class="kv"><span>${L('Réservations','Bookings')}</span><span>${loadRes().length}</span></div>
+      ${email ? `<input class="field" id="mydata-email" type="email" value="${esc(email)}"><div class="msg" id="mydata-msg"></div><button class="btn-dark" data-act="save-email">${L('Rectifier mon e-mail','Update my e-mail')}</button>` : ''}
+    </div>
+    <div class="panel anchor" id="consents"><h3>${L('Consentements','Consents')}</h3>
+      <p>${L("Refusés par défaut. Vous pouvez les accepter, les refuser ou les retirer à tout moment, sans conséquence sur vos réservations.","Refused by default. You can accept, refuse or withdraw them at any time, with no effect on your bookings.")}</p>
+      <div class="switch-row"><div><div class="sw-t">${L('Localisation','Location')}</div><div class="sw-d">${L("Calculer la distance entre vous et les plages, bars et lieux. Votre position n'est pas conservée.","Calculate the distance between you and beaches, bars and places. Your location is not stored.")}</div></div><label class="switch"><input type="checkbox" id="consent-geo" ${c.geo?'checked':''}><span class="slider"></span></label></div>
+      <div class="switch-row"><div><div class="sw-t">${L('Offres par e-mail','E-mail offers')}</div><div class="sw-d">${L("Recevoir des bons plans et des offres de Manava.","Receive deals and offers from Manava.")}</div></div><label class="switch"><input type="checkbox" id="consent-marketing" ${c.marketing?'checked':''}><span class="slider"></span></label></div>
+      <div class="sw-d" style="margin-top:10px">${L('Dernière mise à jour','Last update')} : ${dateTxt}</div>
+    </div>
+    <div class="panel anchor" id="delete-account"><h3>${L('Supprimer mon compte','Delete my account')}</h3>
+      <p>${L("Supprime votre compte, vos favoris et vos consentements. Les données de transaction que la loi impose de conserver (comptabilité) sont archivées à accès restreint puis effacées à l'issue de la durée légale. Dans cette démonstration, tout est effacé sur cet appareil.","Deletes your account, favorites and consents. Transaction data that the law requires to be kept (accounting) is archived with restricted access then erased at the end of the legal period. In this demo, everything is erased on this device.")}</p>
+      <div id="delete-actions">${email ? `<button class="btn-dark" data-act="delete-ask">${L('Supprimer mon compte','Delete my account')}</button>` : `<div class="sw-d">${L('Aucun compte à supprimer.','No account to delete.')}</div>`}</div>
+    </div>`;
+}
+document.getElementById('privacy-space').addEventListener('click', async e => {
+  const a = e.target.closest('[data-act]'); if(!a) return;
+  const act = a.getAttribute('data-act');
+  if(act==='save-email'){
+    const msg = document.getElementById('mydata-msg');
+    const old = store.getItem('manava_session_v1');
+    const ne = document.getElementById('mydata-email').value.trim().toLowerCase();
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(ne)){ msg.textContent = L('E-mail invalide.','Invalid e-mail.'); return; }
+    const accts = loadAccounts();
+    if(ne!==old && accts.find(x => x.email===ne)){ msg.textContent = L('Cet e-mail est déjà utilisé.','This e-mail is already used.'); return; }
+    const me = accts.find(x => x.email===old); if(me){ me.email = ne; saveAccounts(accts); }
+    store.setItem('manava_session_v1', ne);
+    renderProfile(); renderPrivacy();
+    document.getElementById('mydata-msg').textContent = L('E-mail mis à jour.','E-mail updated.');
+  }
+  if(act==='delete-ask'){
+    document.getElementById('delete-actions').innerHTML = `<div class="msg">${L('Cette action est définitive. Confirmer la suppression ?','This action is final. Confirm deletion?')}</div><div style="display:flex;gap:10px"><button class="btn-dark" data-act="delete-confirm">${L('Oui, supprimer','Yes, delete')}</button><button class="btn-ghost" data-act="delete-cancel">${L('Annuler','Cancel')}</button></div>`;
+  }
+  if(act==='delete-cancel'){ renderPrivacy(); }
+  if(act==='delete-confirm'){
+    const email = store.getItem('manava_session_v1');
+    saveAccounts(loadAccounts().filter(x => x.email!==email));
+    ['manava_session_v1','manava_favs_v1','manava_reservations_v1','manava_consent_v1','manava_plan_v1','manava_plan_v2','manava_messages_v1','manava_remind_seen_v1'].forEach(k => store.removeItem(k));
+    userPos = null;
+    applyLang();
+    document.getElementById('delete-actions').innerHTML = `<div class="sw-d">✓ ${L('Votre compte et vos données ont été supprimés.','Your account and data have been deleted.')}</div>`;
+  }
+});
+document.getElementById('privacy-space').addEventListener('change', e => {
+  if(e.target.id==='consent-geo'){
+    const c = loadConsent(); c.geo = e.target.checked; saveConsent(c);
+    if(c.geo) requestGeo(() => { if(activePlace) updatePlaceDistance(activePlace); }); else userPos = null;
+    renderPrivacy();
+  }
+  if(e.target.id==='consent-marketing'){ const c = loadConsent(); c.marketing = e.target.checked; saveConsent(c); renderPrivacy(); }
+});
+function openLegal(anchor){
+  const cur = document.querySelector('.screen.active');
+  if(cur && cur.id!=='screen-legal') screenBeforeLegal = cur.id.replace('screen-','');
+  closeSheet();
+  goTo('legal'); renderLegal(); renderPrivacy();
+  setTimeout(() => { const el = anchor && document.getElementById(anchor); if(el){ if(el.tagName==='DETAILS') el.open = true; el.scrollIntoView({ behavior:'smooth', block:'start' }); } }, 300);
+}
+document.getElementById('legal-link').addEventListener('click', () => openLegal());
+document.getElementById('legal-back').addEventListener('click', () => goTo(screenBeforeLegal));
+document.getElementById('go-mydata').addEventListener('click', () => openLegal('mydata'));
+document.getElementById('go-delete').addEventListener('click', () => openLegal('delete-account'));
+document.getElementById('ps-geo-btn').addEventListener('click', () => {
+  const c = loadConsent(); c.geo = true; saveConsent(c);
+  requestGeo(() => { if(activePlace) updatePlaceDistance(activePlace); renderPrivacy(); });
+});
+
+// ---- Galerie, fiche hébergement, contact prestataire ----
+let activeLodging = null, activeContact = null;
+function lodgingSlides(l){
+  if(l.photos && l.photos.length) return l.photos.map(p => ({ src:p.src, credit:p.credit }));
+  const labels = [{icon:'🛏️',fr:'Chambre',en:'Bedroom'},{icon:'🛋️',fr:'Pièce à vivre',en:'Living area'},{icon:'🌅',fr:'Vue',en:'View'},{icon:'🌿',fr:'Extérieur',en:'Outdoors'}];
+  return labels.map((x,i) => ({ grad: l.grad.replace('150deg', (105+i*40)+'deg'), icon:x.icon, label:x[lang] }));
+}
+function galleryHtml(slides, h){
+  const n = slides.length;
+  return `<div class="gallery" style="height:${h}px"><div class="gal-track">${slides.map(sl => sl.src
+    ? `<div class="gal-slide"><img src="${esc(sl.src)}" alt="" loading="lazy" onerror="this.style.display='none'">${sl.credit?`<span class="gal-credit">${esc(sl.credit)}</span>`:''}</div>`
+    : `<div class="gal-slide" style="background:${sl.grad}"><span class="ph-ic">${sl.icon}</span><span class="ph-lb">${sl.label}</span></div>`).join('')}</div>${n>1?`<span class="gal-count">1 / ${n}</span>`:''}${slides.some(sl => !sl.src)?`<span class="gal-badge">${L("Photo d'exemple","Sample photo")}</span>`:''}</div>`;
+}
+document.addEventListener('scroll', e => {
+  const tr = e.target; if(!tr || !tr.classList || !tr.classList.contains('gal-track')) return;
+  const n = tr.children.length, i = Math.min(n-1, Math.round(tr.scrollLeft / (tr.clientWidth || 1)));
+  const c = tr.parentElement.querySelector('.gal-count'); if(c) c.textContent = (i+1) + ' / ' + n;
+}, true);
+function socList(soc){
+  return `<div class="soc-list">${soc.map(x => { const m = SOC[x.n]; return `<button type="button" class="soc" data-copy="${esc(x.h)}"><span class="soc-ab">${m.ab}</span><span class="soc-t"><b>${m.label}</b><small>${esc(x.h)}</small></span><span class="soc-c">${L('Copier','Copy')}</span></button>`; }).join('')}</div>`;
+}
+function closeLodgingSheet(){ document.getElementById('lodging-sheet-backdrop').classList.remove('open'); }
+function closeContact(){ document.getElementById('contact-sheet-backdrop').classList.remove('open'); }
+function openLodging(id){
+  const l = lodging.find(x => x.id===id); if(!l) return; activeLodging = l;
+  const h = l.host, hh = x => x.replace(':','h');
+  document.getElementById('ls-body').innerHTML = `
+    ${galleryHtml(lodgingSlides(l), 200)}
+    <div class="guide-tags" style="margin:10px 0 0"><span>🌙 ${l.minNights}–${l.maxNights} ${L('nuits','nights')}</span><span>⏰ ${L('Arrivée','Check-in')} ${hh(l.checkin)}</span><span>🚪 ${L('Départ','Check-out')} ${hh(l.checkout)}</span><span>👥 ${l.guests} ${L('voyageurs','guests')}</span></div>
+    <h3 style="margin-top:12px">${l.title[lang]}</h3>
+    <div class="card-meta">${l.meta[lang]} · ${l.type[lang]} · ${l.beds[lang]}</div>
+    <div class="ls-top"><div class="price-tag">${fmt(l.price)} <span>${t('perNight')}</span></div>${heartBtn('lodging',l.id)}</div>
+    <button class="btn-reserve full" data-book-label="${esc(l.title[lang])}" data-book-xpf="${l.price}" data-book-unit="perNight" data-book-min="${l.minNights}" data-book-max="${l.maxNights}">${t('reserve')}</button>
+    <button class="btn-dark" data-act="ls-contact" style="width:100%;margin-top:8px;min-height:44px">${L("Contacter l'hôte","Contact the host")}</button>
+    <div class="panel" style="margin-top:16px"><h3>${L('Conditions du séjour','Stay conditions')}</h3>
+      <div class="kv"><span>${L('Durée du séjour','Stay length')}</span><span>${l.minNights} – ${l.maxNights} ${L('nuits','nights')}</span></div>
+      <div class="kv"><span>${L('Arrivée','Check-in')}</span><span>${L('à partir de','from')} ${hh(l.checkin)}</span></div>
+      <div class="kv"><span>${L('Départ','Check-out')}</span><span>${L('avant','before')} ${hh(l.checkout)}</span></div>
+      <div class="kv"><span>${L('Voyageurs','Guests')}</span><span>${L('jusqu\'à','up to')} ${l.guests}</span></div>
+      <div class="kv"><span>${L('Annulation','Cancellation')}</span><span>${l.cancel[lang]}</span></div>
+      <ul class="rule-list">${l.rules[lang].map(r => `<li>${r}</li>`).join('')}</ul></div>
+    <div class="panel"><h3>${L('Votre hôte','Your host')}</h3>
+      <div class="guide-top"><div class="avatar" style="background:${l.grad}">${h.initials}</div><div style="min-width:0"><h3 style="font-size:15.5px;margin:0">${esc(h.name)}</h3><div class="guide-langs">${L('Hôte depuis','Host since')} ${h.since} · ${h.resp[lang]}</div></div></div>
+      ${socList(h.socials)}</div>
+    <p class="sw-d">${L("Fiche d'exemple : photos, conditions et hôte fictifs. Dans la version commerciale, chaque hôte publie ses propres photos et conditions.","Sample listing: photos, conditions and host are fictional. In the commercial version each host publishes their own photos and conditions.")}</p>`;
+  document.getElementById('lodging-sheet-backdrop').classList.add('open');
+}
+function contactTarget(ref){
+  const i = ref.indexOf(':'), kind = ref.slice(0,i), id = ref.slice(i+1);
+  if(kind==='guide'){ const g = guides.find(x => x.id===id); if(!g) return null; return { key:ref, name:g.name, role:g.tags[lang].join(' · '), initials:g.initials, grad:g.grad, resp:g.contact.resp, socials:g.contact.socials }; }
+  if(kind==='lodging'){ const l = lodging.find(x => x.id===id); if(!l) return null; return { key:ref, name:l.host.name, role:L('Hôte · ','Host · ') + l.title[lang], initials:l.host.initials, grad:l.grad, resp:l.host.resp, socials:l.host.socials }; }
+  return null;
+}
+function openContact(ref){
+  const c = contactTarget(ref); if(!c) return; activeContact = c;
+  document.getElementById('cs-body').innerHTML = `
+    <div class="guide-top"><div class="avatar" style="background:${c.grad}">${c.initials}</div><div style="min-width:0"><h3 style="margin:0">${esc(c.name)}</h3><div class="guide-langs">${c.role}</div></div><span class="demo-pill" style="margin-left:auto">${L('Exemple','Sample')}</span></div>
+    <div class="sw-d" style="margin-top:10px">${c.resp[lang]}</div>
+    <h4 class="cs-h">${L('Réseaux sociaux','Social networks')}</h4>
+    ${socList(c.socials)}
+    <p class="sw-d" style="margin:0">${L("Comptes fictifs d'exemple. Dans la version commerciale, ces boutons ouvrent le vrai profil du prestataire.","Fictional sample accounts. In the commercial version these buttons open the provider's real profile.")}</p>
+    <h4 class="cs-h">${L('Écrire via Manava','Write via Manava')}</h4>
+    <textarea class="field" id="cs-msg" placeholder="${L('Votre message…','Your message…')}" style="margin-top:6px"></textarea>
+    <div class="msg" id="cs-out"></div>
+    <button class="btn-dark" data-act="cs-send" style="min-height:44px">${L('Envoyer le message','Send message')}</button>`;
+  document.getElementById('contact-sheet-backdrop').classList.add('open');
+}
+function sendContactMsg(){
+  const ta = document.getElementById('cs-msg'), out = document.getElementById('cs-out'), txt = ta.value.trim();
+  if(txt.length < 5){ out.textContent = L('Écrivez un message (5 caractères minimum).','Write a message (at least 5 characters).'); return; }
+  let list = []; try { list = JSON.parse(store.getItem('manava_messages_v1')||'[]'); } catch(e){}
+  list.push({ to:activeContact.key, text:txt, date:Date.now() }); store.setItem('manava_messages_v1', JSON.stringify(list));
+  ta.value = ''; out.textContent = L("✓ Message enregistré sur cet appareil (démonstration : il n'est pas encore transmis au prestataire).","✓ Message saved on this device (demo: not yet sent to the provider).");
+}
+document.addEventListener('click', e => {
+  const cp = e.target.closest('[data-copy]');
+  if(cp){
+    const txt = cp.getAttribute('data-copy'), lab = cp.querySelector('.soc-c');
+    const done = ok => { if(lab){ lab.textContent = ok ? L('Copié ✓','Copied ✓') : L('Sélectionnez le texte','Select the text'); setTimeout(() => { lab.textContent = L('Copier','Copy'); }, 1800); } };
+    try { navigator.clipboard.writeText(txt).then(() => done(true), () => done(false)); } catch(err){ done(false); }
+    return;
+  }
+  const lo = e.target.closest('[data-lodging]'); if(lo){ openLodging(lo.getAttribute('data-lodging')); return; }
+  const co = e.target.closest('[data-contact]'); if(co){ openContact(co.getAttribute('data-contact')); return; }
+  const a = e.target.closest('[data-act]'); if(!a) return;
+  const act = a.getAttribute('data-act');
+  if(act==='ics') exportIcs();
+  if(act==='cs-send') sendContactMsg();
+  if(act==='ls-contact' && activeLodging) openContact('lodging:'+activeLodging.id);
+  if(act==='remind-go'){ favView = 'plan'; goTo('favoris'); }
+  if(act==='remind-ok'){ const el = document.getElementById('remind-banner'); try { store.setItem('manava_remind_seen_v1', el.getAttribute('data-sig')||''); } catch(err){} renderRemindBanner(); }
+});
+document.getElementById('lodging-close').addEventListener('click', closeLodgingSheet);
+document.getElementById('contact-close').addEventListener('click', closeContact);
+document.getElementById('lodging-sheet-backdrop').addEventListener('click', e => { if(e.target.id==='lodging-sheet-backdrop') closeLodgingSheet(); });
+document.getElementById('contact-sheet-backdrop').addEventListener('click', e => { if(e.target.id==='contact-sheet-backdrop') closeContact(); });
+
+// ---- Onboarding logic (langue + bienvenue uniquement ; l'identification se fait désormais au moment de la réservation) ----
+function loadAccounts(){ try { return JSON.parse(store.getItem('manava_accounts_v1')||'[]'); } catch(e){ return []; } }
+function saveAccounts(a){ store.setItem('manava_accounts_v1', JSON.stringify(a)); }
+function goObStep(step){ document.querySelectorAll('.ob-step').forEach(s => s.style.display='none'); document.getElementById('ob-'+step).style.display='flex'; document.getElementById('ob-lang').classList.remove('leaving'); }
+let obBusy = false;
+document.querySelectorAll('.ob-lang-btn').forEach(b => b.addEventListener('click', () => {
+  if(obBusy) return; obBusy = true;
+  lang = b.getAttribute('data-l'); store.setItem('manava_lang_v1', lang); document.documentElement.lang = lang;
+  document.getElementById('ob-welcome-text').textContent = lang==='fr' ? 'Bienvenue sur Manava' : 'Welcome to Manava';
+  store.setItem('manava_onboarded_v1', '1');
+  const logo = document.getElementById('ob-logo');
+  const size = logo.getBoundingClientRect().width || 300;
+  logo.style.setProperty('--ob-end', String(Math.hypot(window.innerWidth, window.innerHeight) / size * 1.05));
+  logo.classList.add('grow');
+  document.getElementById('ob-lang').classList.add('leaving');
+  const w = document.getElementById('ob-welcome'); w.style.display = 'flex'; w.classList.add('show');
+  setTimeout(() => { document.getElementById('ob-lang').style.display = 'none'; }, 320);
+  setTimeout(finishOnboarding, 4200);
+}));
+document.getElementById('ob-welcome').addEventListener('click', finishOnboarding);
+function finishOnboarding(){ document.getElementById('onboarding').style.display = 'none'; applyLang(); }
+
+(function initOnboarding(){
+  const onboarded = store.getItem('manava_onboarded_v1');
+  if(onboarded){ lang = store.getItem('manava_lang_v1') || 'fr'; document.documentElement.lang = lang; document.getElementById('onboarding').style.display = 'none'; }
+  else { document.getElementById('onboarding').style.display = 'flex'; goObStep('lang'); }
+})();
+
+applyLang();
+</script>
+</body>
+</html>
